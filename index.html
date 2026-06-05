@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caminhos Possíveis 2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090f;--surface:#111118;--surface2:#18181f;--surface3:#20202a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#eeeef0;--muted:#7a7a8c;--dim:#4a4a58;
+  --accent:#8b6cf0;--accent-light:#a98ef5;
+  --green:#3eb87a;--green-dim:rgba(62,184,122,0.12);
+  --amber:#d4943a;--amber-dim:rgba(212,148,58,0.12);
+  --red:#d45a5a;--red-dim:rgba(212,90,90,0.12);
+  --teal:#3ab8b0;--gold:#c4a44a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.screen.active{display:flex}
+#screen-game{padding-top:80px;padding-bottom:3rem;max-width:860px;margin:0 auto;width:100%;align-items:stretch;justify-content:flex-start}
+.serif{font-family:'Fraunces',serif}
+.mono{font-family:'DM Mono',monospace}
+.btn{border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .18s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--accent);color:#fff;padding:13px 32px;border-radius:100px;font-size:.95rem}
+.btn-primary:hover{background:var(--accent-light);transform:translateY(-2px);box-shadow:0 8px 28px rgba(139,108,240,.35)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2);padding:11px 24px;border-radius:100px;font-size:.9rem}
+.btn-ghost:hover{color:var(--text);border-color:rgba(255,255,255,.25)}
+
+/* SCREEN 1 */
+#screen-welcome{background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(139,108,240,.14),transparent 70%),radial-gradient(ellipse 40% 40% at 80% 70%,rgba(58,184,176,.07),transparent 60%),var(--bg);text-align:center;gap:0}
+.welcome-eyebrow{display:inline-flex;align-items:center;gap:10px;background:rgba(139,108,240,.1);border:1px solid rgba(139,108,240,.25);border-radius:100px;padding:6px 18px;margin-bottom:2.5rem}
+.welcome-eyebrow span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-light)}
+.welcome-title{font-family:'Fraunces',serif;font-size:clamp(3rem,8vw,6.5rem);line-height:.95;margin-bottom:.75rem;background:linear-gradient(135deg,#fff,#c0b0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.welcome-title em{font-style:italic}
+.welcome-sub{font-size:1.05rem;color:var(--muted);max-width:500px;margin:0 auto 3rem;line-height:1.75}
+.welcome-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:3rem}
+.badge{background:var(--surface2);border:1px solid var(--border2);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--muted)}
+.welcome-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.welcome-stats{display:flex;gap:3rem;justify-content:center;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.welcome-stat .n{font-family:'Fraunces',serif;font-size:2.2rem;background:linear-gradient(135deg,#fff,#a98ef5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.welcome-stat .l{font-size:11px;color:var(--muted);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+
+/* MISSION, HOWTO, SCORING, CARDS */
+.inner-wrap{max-width:720px;width:100%}
+.kicker{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem;line-height:1.1}
+.page-lead{color:var(--muted);font-size:.92rem;line-height:1.75;margin-bottom:1.5rem}
+.page-nav{display:flex;gap:10px;margin-top:2.5rem;flex-wrap:wrap}
+.body-text{font-size:.95rem;line-height:1.85;color:#c0c0d0;margin-bottom:1.25rem}
+.voice-block{background:var(--surface2);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:14px;padding:1.25rem 1.5rem;margin:1.5rem 0;font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;line-height:1.65;color:#d0d0e0}
+.voice-block cite{display:block;margin-top:.75rem;font-style:normal;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.08em}
+.context-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:1.5rem 0 2rem}
+.ctx-pill{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:.9rem 1rem}
+.ctx-pill .icon{font-size:1.4rem;margin-bottom:6px}
+.ctx-pill .name{font-size:.85rem;font-weight:500;margin-bottom:2px}
+.ctx-pill .desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+.steps-list{margin:1.5rem 0 2rem}
+.step-item{display:flex;gap:16px;align-items:flex-start;padding:1.1rem 0;border-bottom:1px solid var(--border)}
+.step-item:last-child{border-bottom:none}
+.step-dot{min-width:36px;height:36px;border-radius:50%;background:rgba(139,108,240,.15);border:1px solid rgba(139,108,240,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--accent-light);flex-shrink:0}
+.step-content h4{font-size:.95rem;font-weight:600;margin-bottom:3px}
+.step-content p{font-size:.86rem;color:var(--muted);line-height:1.6}
+.xp-info{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:1.25rem;margin:1.5rem 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.xp-row{text-align:center;padding:.75rem;border-radius:8px;background:var(--surface3)}
+.xp-row .pts{font-family:'Fraunces',serif;font-size:1.6rem}
+.xp-row .pts.correct{color:var(--green)}
+.xp-row .pts.partial{color:var(--amber)}
+.xp-row .pts.wrong{color:var(--red)}
+.xp-row .lbl{font-size:11px;color:var(--muted);margin-top:3px}
+.axes-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1.5rem 0 2rem}
+.axis-card{background:var(--surface2);border:1px solid var(--border2);border-radius:14px;padding:1.1rem 1.25rem}
+.axis-card .ax-icon{font-size:1.5rem;margin-bottom:8px}
+.axis-card .ax-name{font-size:.9rem;font-weight:600;margin-bottom:4px}
+.axis-card .ax-desc{font-size:.8rem;color:var(--muted);line-height:1.55}
+.levels-table{width:100%;border-collapse:collapse;margin:1.5rem 0}
+.levels-table th{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border2);text-align:left}
+.levels-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:.87rem}
+.levels-table tr:last-child td{border-bottom:none}
+.lv-badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600}
+.lv1{background:rgba(122,122,140,.15);color:var(--muted)}
+.lv2{background:rgba(58,184,176,.12);color:var(--teal)}
+.lv3{background:rgba(139,108,240,.15);color:var(--accent-light)}
+.lv4{background:rgba(196,164,74,.15);color:var(--gold)}
+.lv5{background:rgba(62,184,122,.15);color:var(--green)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:1.5rem 0 2rem}
+.concept-card{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;overflow:hidden;position:relative}
+.concept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.cc-educacao::before{background:var(--teal)}
+.cc-social::before{background:var(--accent)}
+.cc-etica::before{background:var(--gold)}
+.cc-direitos::before{background:var(--green)}
+.cc-institucional::before{background:var(--amber)}
+.cc-autonomia::before{background:#e07fa0}
+.cc-exclusao::before{background:var(--red)}
+.cc-inner{padding:1.25rem}
+.cc-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.cc-title{font-family:'Fraunces',serif;font-size:1.15rem;margin-bottom:.6rem;line-height:1.2}
+.cc-def{font-size:.83rem;line-height:1.65;color:#b0b0c0;margin-bottom:.75rem}
+.cc-example{background:var(--surface3);border-radius:8px;padding:.7rem .9rem;font-size:.8rem;line-height:1.6;color:var(--muted);border-left:2px solid var(--border2)}
+.cc-example strong{color:var(--text);font-weight:500}
+.cc-author{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-top:.75rem;letter-spacing:.06em}
+
+/* HUD */
+.hud{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(9,9,15,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.7rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.hud-left{display:flex;align-items:center;gap:10px}
+.hud-logo{font-family:'Fraunces',serif;font-size:.95rem}
+.hud-logo em{font-style:italic;color:var(--accent-light)}
+.hud-sep{width:1px;height:20px;background:var(--border2)}
+.hud-scenario{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.hud-right{display:flex;align-items:center;gap:14px}
+.hud-axes{display:flex;gap:8px}
+.ax-mini{display:flex;flex-direction:column;align-items:center;gap:3px}
+.ax-mini .ax-bar{width:32px;height:3px;background:var(--surface3);border-radius:100px;overflow:hidden}
+.ax-mini .ax-fill{height:100%;border-radius:100px;transition:width .5s}
+.ax-mini .ax-label{font-size:9px;color:var(--dim)}
+.hud-level{background:rgba(139,108,240,.15);border:1px solid rgba(139,108,240,.25);border-radius:100px;padding:3px 12px;font-size:11px;font-weight:600;color:var(--accent-light)}
+.hud-xp{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+.hud-xp strong{color:var(--text)}
+
+/* GAME */
+.game-header{display:flex;align-items:center;gap:12px;margin-bottom:2rem;padding-top:.5rem}
+.game-progress{flex:1;height:2px;background:var(--surface3);border-radius:100px;overflow:hidden}
+.game-progress-fill{height:100%;background:var(--accent);transition:width .5s}
+.ctx-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;white-space:nowrap}
+.tag-escola{background:rgba(58,184,176,.12);color:var(--teal);border:1px solid rgba(58,184,176,.2)}
+.tag-trabalho{background:rgba(212,148,58,.12);color:var(--amber);border:1px solid rgba(212,148,58,.2)}
+.tag-saude{background:rgba(212,90,90,.12);color:var(--red);border:1px solid rgba(212,90,90,.2)}
+.tag-publico{background:rgba(139,108,240,.12);color:var(--accent-light);border:1px solid rgba(139,108,240,.2)}
+.tag-familia{background:rgba(62,184,122,.12);color:var(--green);border:1px solid rgba(62,184,122,.2)}
+.tag-justica{background:rgba(196,164,74,.12);color:var(--gold);border:1px solid rgba(196,164,74,.2)}
+.tag-comunidade{background:rgba(80,160,220,.12);color:#50a0dc;border:1px solid rgba(80,160,220,.2)}
+.voice-card{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:20px;padding:1.5rem 1.75rem;margin-bottom:1.25rem}
+.voice-header{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--surface2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.char-info .char-name{font-weight:500;font-size:.95rem}
+.char-info .char-desc{font-size:.8rem;color:var(--muted);margin-top:2px}
+.voice-quote{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;line-height:1.65;color:#d0d0e0;border-top:1px solid var(--border);padding-top:1rem}
+.scenario-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:1.5rem 1.75rem;margin-bottom:1.25rem}
+.scenario-title{font-family:'Fraunces',serif;font-size:1.4rem;margin-bottom:.75rem;line-height:1.25}
+.scenario-text{font-size:.92rem;line-height:1.85;color:#c0c0cc}
+.risk-pill{display:inline-flex;align-items:center;gap:7px;background:var(--red-dim);border:1px solid rgba(212,90,90,.2);border-radius:100px;padding:5px 14px;font-size:11px;color:var(--red);margin-top:1.1rem}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.role-card{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:12px;align-items:flex-start}
+.role-icon{font-size:1.25rem;margin-top:2px}
+.role-text{font-size:.87rem;color:var(--muted);line-height:1.65}
+.role-text strong{color:var(--text);font-weight:500}
+.choices-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:.9rem}
+.choice-btn{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:1.15rem 1.4rem;text-align:left;cursor:pointer;margin-bottom:10px;transition:all .15s;display:flex;align-items:flex-start;gap:14px;color:var(--text);font-family:'DM Sans',sans-serif}
+.choice-btn:hover:not(:disabled){background:var(--surface2);border-color:rgba(139,108,240,.4);transform:translateX(4px)}
+.choice-letter{min-width:30px;height:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);flex-shrink:0;transition:all .15s;margin-top:1px}
+.choice-btn:hover .choice-letter{background:rgba(139,108,240,.2);color:var(--accent-light);border-color:rgba(139,108,240,.4)}
+.choice-text{font-size:.91rem;line-height:1.65}
+.choice-btn.correct{background:var(--green-dim);border-color:rgba(62,184,122,.35);pointer-events:none}
+.choice-btn.correct .choice-letter{background:var(--green);color:#fff;border-color:var(--green)}
+.choice-btn.partial{background:var(--amber-dim);border-color:rgba(212,148,58,.3);pointer-events:none}
+.choice-btn.partial .choice-letter{background:var(--amber);color:#fff;border-color:var(--amber)}
+.choice-btn.wrong{background:var(--red-dim);border-color:rgba(212,90,90,.3);pointer-events:none}
+.choice-btn.wrong .choice-letter{background:var(--red);color:#fff;border-color:var(--red)}
+.choice-btn.dimmed{opacity:.35;pointer-events:none}
+.feedback-panel{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:1.5rem 1.75rem;margin-bottom:1.25rem;display:none;animation:slideUp .3s ease}
+.feedback-panel.visible{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fb-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.fb-icon{font-size:1.4rem}
+.fb-result{font-weight:600;font-size:1rem}
+.fb-correct{color:var(--green)}.fb-partial{color:var(--amber)}.fb-wrong{color:var(--red)}
+.voice-reaction{border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;font-style:italic;font-size:.9rem;line-height:1.65;color:#c0c0cc;font-family:'Fraunces',serif}
+.voice-reaction .vr-label{font-family:'DM Sans',sans-serif;font-style:normal;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:6px}
+.c-good{background:var(--green-dim);border:1px solid rgba(62,184,122,.2);color:#90d8b0}
+.c-mid{background:var(--amber-dim);border:1px solid rgba(212,148,58,.2);color:#d4b080}
+.c-bad{background:var(--red-dim);border:1px solid rgba(212,90,90,.2);color:#d09090}
+.fb-explanation{font-size:.88rem;line-height:1.75;color:#b0b0c0;margin-bottom:1rem}
+.fb-concept{background:var(--surface2);border:1px solid rgba(139,108,240,.2);border-left:3px solid var(--accent);border-radius:14px;padding:.9rem 1.1rem;font-size:.83rem;color:var(--muted);line-height:1.65;margin-bottom:1rem}
+.fb-concept strong{color:var(--accent-light);font-weight:500}
+.consequence-block{border-radius:14px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:.87rem;line-height:1.7}
+.consequence-block .c-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;opacity:.7}
+.xp-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,108,240,.15);color:var(--accent-light);border-radius:100px;padding:4px 14px;font-size:12px;font-weight:600;margin-top:.5rem}
+.axes-gained{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.ax-gained{font-size:11px;padding:3px 10px;border-radius:100px;background:var(--surface3);color:var(--muted)}
+.ax-gained.lit{background:rgba(139,108,240,.15);color:var(--accent-light)}
+.btn-next{background:var(--accent);color:#fff;border:none;padding:12px 28px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:500;cursor:pointer;transition:all .18s;margin-top:.75rem;display:inline-flex;align-items:center;gap:8px}
+.btn-next:hover{background:var(--accent-light)}
+.toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);background:rgba(139,108,240,.92);color:#fff;padding:9px 22px;border-radius:100px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+/* END SCREEN */
+#screen-end{background:radial-gradient(ellipse 50% 40% at 50% 20%,rgba(139,108,240,.1),transparent 60%),var(--bg);text-align:center;padding:4rem 2rem}
+.end-wrap{max-width:640px;width:100%}
+.end-trophy{font-size:4.5rem;margin-bottom:1.25rem}
+.end-title{font-family:'Fraunces',serif;font-size:clamp(2rem,5vw,3rem);margin-bottom:.5rem}
+.end-sub{color:var(--muted);max-width:440px;margin:0 auto 2.5rem;line-height:1.75;font-size:.95rem}
+.end-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.end-stat{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:1.25rem 1rem}
+.end-stat .ev{font-family:'Fraunces',serif;font-size:2.2rem;color:var(--accent-light)}
+.end-stat .el{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.axes-report{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;text-align:left}
+.axes-report h3{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1rem}
+.ax-report-row{display:flex;align-items:center;gap:12px;margin-bottom:.75rem}
+.ax-report-row:last-child{margin-bottom:0}
+.ar-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0}
+.ar-name{font-size:.83rem;font-weight:500;min-width:130px;color:#c0c0cc}
+.ar-bar{flex:1;height:6px;background:var(--surface3);border-radius:100px;overflow:hidden}
+.ar-fill{height:100%;border-radius:100px;background:var(--accent);transition:width 1s ease}
+.ar-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);min-width:30px;text-align:right}
+.end-message{background:var(--surface2);border:1px solid rgba(139,108,240,.2);border-radius:20px;padding:1.5rem;margin-bottom:2rem;font-style:italic;font-size:.95rem;line-height:1.75;color:#c0c0d0;font-family:'Fraunces',serif;text-align:left}
+.end-rights{background:var(--surface2);border:1px solid rgba(62,184,122,.2);border-radius:20px;padding:1.5rem;margin-bottom:2rem;text-align:left}
+.end-rights h3{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--green);margin-bottom:.75rem}
+.end-rights ul{list-style:none}
+.end-rights li{font-size:.86rem;color:#a0a0b0;padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.end-rights li:last-child{border-bottom:none}
+.end-rights li::before{content:'→';color:var(--green);flex-shrink:0}
+.end-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+@media(max-width:600px){.hud-axes{display:none}.end-grid{grid-template-columns:1fr 1fr}.axes-grid{grid-template-columns:1fr}.xp-info{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- SCREEN 1 — BOAS-VINDAS -->
+<div class="screen active" id="screen-welcome">
+  <div class="welcome-eyebrow"><span>🎓 Psicologia · Indivíduo, Cultura e Sociedade</span></div>
+  <h1 class="welcome-title">Caminhos<br><em>Possíveis</em></h1>
+  <p class="welcome-sub">Você está prestes a assumir o papel mais desafiador da formação em Psicologia:<br><strong style="color:var(--text)">tomar decisões reais, com consequências reais, para pessoas reais.</strong></p>
+  <div class="welcome-badges">
+    <span class="badge">👁 Deficiência &amp; Exclusão Social</span>
+    <span class="badge">⚖️ Direitos Humanos</span>
+    <span class="badge">🧠 Psicologia Social Crítica</span>
+    <span class="badge">🏛 Atuação Institucional</span>
+    <span class="badge">🤝 Autonomia e Dignidade</span>
+  </div>
+  <div class="welcome-btns">
+    <button class="btn btn-primary" onclick="goTo('screen-mission')">Começar a jornada →</button>
+    <button class="btn btn-ghost" onclick="goTo('screen-howto')">Como jogar</button>
+    <button class="btn btn-ghost" onclick="goTo('screen-cards')">Cartas de conceito</button>
+  </div>
+  <div class="welcome-stats">
+    <div class="welcome-stat"><div class="n">15</div><div class="l">Casos</div></div>
+    <div class="welcome-stat"><div class="n">45</div><div class="l">Decisões</div></div>
+    <div class="welcome-stat"><div class="n">5</div><div class="l">Eixos</div></div>
+    <div class="welcome-stat"><div class="n">1500</div><div class="l">XP Máx.</div></div>
+  </div>
+</div>
+
+<!-- SCREEN 2 — MISSÃO -->
+<div class="screen" id="screen-mission">
+  <div class="inner-wrap">
+    <div class="kicker">Tela 02 — Sua Missão</div>
+    <h2 class="page-title serif">Você é psicólogo(a).<br>E há alguém esperando por você.</h2>
+    <p class="body-text">No Brasil, <strong style="color:var(--text)">18,6 milhões de pessoas têm deficiência.</strong> A maioria enfrenta, todos os dias, barreiras que a sociedade construiu e se recusa a remover. Barreiras físicas. Barreiras comunicacionais. Barreiras institucionais. Barreiras que existem dentro das pessoas — nos preconceitos que ninguém admite ter.</p>
+    <p class="body-text">Ao longo desta jornada, você vai encontrar <strong style="color:var(--text)">15 personagens reais</strong> — cada um vivendo uma situação concreta de risco à sua sociabilidade, aos seus direitos e à sua dignidade. Você vai ler cada história. Vai sentir o peso de cada escolha. E vai decidir como atuar.</p>
+    <div class="voice-block">"Não preciso que você me salve. Preciso que você faça o que é certo."<cite>— Fala que poderia pertencer a qualquer um dos 15 personagens deste jogo</cite></div>
+    <p class="body-text">Você vai atuar em <strong style="color:var(--text)">6 contextos diferentes</strong>, como 6 tipos de psicólogo(a):</p>
+    <div class="context-grid">
+      <div class="ctx-pill"><div class="icon">🏫</div><div class="name">Escola</div><div class="desc">Inclusão real na educação</div></div>
+      <div class="ctx-pill"><div class="icon">💼</div><div class="name">Trabalho</div><div class="desc">Direitos no emprego</div></div>
+      <div class="ctx-pill"><div class="icon">🏥</div><div class="name">Saúde</div><div class="desc">Cuidado com dignidade</div></div>
+      <div class="ctx-pill"><div class="icon">🏘</div><div class="name">Família</div><div class="desc">Proteção e vínculo</div></div>
+      <div class="ctx-pill"><div class="icon">⚖️</div><div class="name">Justiça</div><div class="desc">Autonomia e acesso a direitos</div></div>
+      <div class="ctx-pill"><div class="icon">🏙</div><div class="name">Comunidade</div><div class="desc">Transformação coletiva</div></div>
+    </div>
+    <div class="page-nav">
+      <button class="btn btn-primary" onclick="goTo('screen-howto')">Como jogar →</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-welcome')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3 — COMO JOGAR -->
+<div class="screen" id="screen-howto">
+  <div class="inner-wrap">
+    <div class="kicker">Tela 03 — Manual do Jogador</div>
+    <h2 class="page-title serif">Como funciona cada rodada</h2>
+    <p class="page-lead">Cada caso tem uma estrutura em 6 momentos. Compreenda o fluxo antes de começar.</p>
+    <div class="steps-list">
+      <div class="step-item"><div class="step-dot">1</div><div class="step-content"><h4>Ouça a voz do personagem</h4><p>Antes de qualquer decisão, você lê uma fala do próprio personagem — em primeira pessoa. Ela revela o que ele sente e o que está em jogo.</p></div></div>
+      <div class="step-item"><div class="step-dot">2</div><div class="step-content"><h4>Leia o caso completo</h4><p>A situação é descrita com contexto, histórico e o risco que a PCD está enfrentando. Leia com atenção — os detalhes importam.</p></div></div>
+      <div class="step-item"><div class="step-dot">3</div><div class="step-content"><h4>Identifique seu papel profissional</h4><p>Cada caso indica qual tipo de psicólogo(a) você é naquele momento. Isso define seu escopo de atuação.</p></div></div>
+      <div class="step-item"><div class="step-dot">4</div><div class="step-content"><h4>Escolha uma intervenção</h4><p>Três alternativas são apresentadas. Todas parecem razoáveis. A diferença está na profundidade, no foco e no alcance de cada uma.</p></div></div>
+      <div class="step-item"><div class="step-dot">5</div><div class="step-content"><h4>Receba o feedback completo</h4><p>Após a escolha: reação do personagem → avaliação técnica → conceito teórico ativado → consequência narrativa (o que aconteceu semanas depois).</p></div></div>
+      <div class="step-item"><div class="step-dot">6</div><div class="step-content"><h4>Ganhe XP e avance nos eixos</h4><p>Cada decisão alimenta seus 5 eixos de competência. Ao final, você recebe um perfil de formação — não uma nota.</p></div></div>
+    </div>
+    <div class="xp-info">
+      <div class="xp-row"><div class="pts correct">+100</div><div class="lbl">Intervenção Ideal</div></div>
+      <div class="xp-row"><div class="pts partial">+30</div><div class="lbl">Parcialmente Adequada</div></div>
+      <div class="xp-row"><div class="pts wrong">+0</div><div class="lbl">Distratora</div></div>
+    </div>
+    <div class="page-nav">
+      <button class="btn btn-primary" onclick="goTo('screen-scoring')">Ver sistema de pontuação →</button>
+      <button class="btn btn-ghost" onclick="startGame()">Pular e jogar agora →</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-mission')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4 — PONTUAÇÃO -->
+<div class="screen" id="screen-scoring">
+  <div class="inner-wrap">
+    <div class="kicker">Tela 04 — Sistema de Pontuação</div>
+    <h2 class="page-title serif">5 Eixos de Competência</h2>
+    <p class="page-lead">Sua pontuação não é uma nota — é um retrato da sua formação. Cada decisão alimenta um ou mais eixos.</p>
+    <div class="axes-grid">
+      <div class="axis-card"><div class="ax-icon">🎧</div><div class="ax-name">Escuta Qualificada</div><div class="ax-desc">Capacidade de acolher o sujeito, validar sua experiência e colocá-lo como protagonista do cuidado — antes de agir.</div></div>
+      <div class="axis-card"><div class="ax-icon">⚖️</div><div class="ax-name">Garantia de Direitos</div><div class="ax-desc">Conhecimento e mobilização do arcabouço legal: LBI, Convenção ONU, ECA, Lei de LIBRAS, Código de Ética do CFP.</div></div>
+      <div class="axis-card"><div class="ax-icon">🏛️</div><div class="ax-name">Atuação Institucional</div><div class="ax-desc">Intervenção que transforma práticas, documenta violações e aciona mecanismos institucionais — matriciamento, laudos, ouvidorias.</div></div>
+      <div class="axis-card"><div class="ax-icon">🧭</div><div class="ax-name">Sensibilidade Ética</div><div class="ax-desc">Reconhecimento de dilemas complexos, posicionamento crítico e respeito à autonomia do sujeito mesmo quando isso exige contenção.</div></div>
+      <div class="axis-card"><div class="ax-icon">🔗</div><div class="ax-name">Compreensão Social da Deficiência</div><div class="ax-desc">Capacidade de ler deficiência como fenômeno social — não individual — e identificar capacitismo, estigma e barreiras estruturais.</div></div>
+    </div>
+    <h3 class="serif" style="font-size:1.2rem;margin-bottom:1rem">Níveis de Progressão</h3>
+    <table class="levels-table">
+      <tr><th>XP Total</th><th>Nível</th><th>Descrição</th></tr>
+      <tr><td>0–199</td><td><span class="lv-badge lv1">Estagiário(a) em Formação</span></td><td style="color:var(--muted)">Intervenções centradas no indivíduo. Em construção.</td></tr>
+      <tr><td>200–499</td><td><span class="lv-badge lv2">Psicólogo(a) Iniciante</span></td><td style="color:var(--muted)">Bom acolhimento. Percebe as dimensões institucionais.</td></tr>
+      <tr><td>500–899</td><td><span class="lv-badge lv3">Psicólogo(a) Institucional</span></td><td style="color:var(--muted)">Atua além do consultório. Articula cuidado e direitos.</td></tr>
+      <tr><td>900–1299</td><td><span class="lv-badge lv4">Defensor(a) de Direitos</span></td><td style="color:var(--muted)">Domina legislação e age estruturalmente com ética.</td></tr>
+      <tr><td>1300+</td><td><span class="lv-badge lv5">Especialista em Inclusão</span></td><td style="color:var(--muted)">Intervenções críticas, sistêmicas e comprometidas. Referência.</td></tr>
+    </table>
+    <div class="page-nav">
+      <button class="btn btn-primary" onclick="goTo('screen-cards')">Ver cartas de conceito →</button>
+      <button class="btn btn-ghost" onclick="startGame()">Jogar agora →</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-howto')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 5 — CARTAS DE CONCEITO -->
+<div class="screen" id="screen-cards">
+  <div style="max-width:900px;width:100%">
+    <div class="kicker">Tela 05 — Cartas de Conceito</div>
+    <h2 class="page-title serif">O que você precisa saber para jogar</h2>
+    <p class="page-lead">Estes conceitos vão aparecer nos feedbacks. Conheça-os antes — ou eles vão te encontrar durante a jornada.</p>
+    <div class="concept-grid">
+      <div class="concept-card cc-educacao"><div class="cc-inner"><div class="cc-tag">Teoria Fundamental</div><div class="cc-title serif">Modelo Social da Deficiência</div><div class="cc-def">A deficiência não é um problema do corpo — é o resultado da interação entre o corpo e as barreiras que a sociedade constrói. Não é a cadeira de rodas que exclui: é a escada sem rampa.</div><div class="cc-example"><strong>No jogo:</strong> Quando você vê uma PCD sendo excluída por falta de acessibilidade, o problema é a estrutura — não ela.</div><div class="cc-author">Oliver (1996) · LBI, 2015 · Convenção ONU, 2006</div></div></div>
+      <div class="concept-card cc-exclusao"><div class="cc-inner"><div class="cc-tag">Discriminação Estrutural</div><div class="cc-title serif">Capacitismo</div><div class="cc-def">A crença — muitas vezes inconsciente — de que corpos e mentes que se desviam de um padrão de capacidade são inferiores. Pode ser explícito ou disfarçado de "cuidado".</div><div class="cc-example"><strong>No jogo:</strong> Quando a alternativa "errada" parece generosa mas responsabiliza a PCD pelo problema alheio.</div><div class="cc-author">Campbell (2009) · Psicologia Social Crítica</div></div></div>
+      <div class="concept-card cc-social"><div class="cc-inner"><div class="cc-tag">Sociologia</div><div class="cc-title serif">Estigma</div><div class="cc-def">Um atributo profundamente depreciativo que reduz uma pessoa a uma identidade deteriorada. O estigma não é uma marca no corpo — é uma marca social que outros impõem e o sujeito acaba internalizando.</div><div class="cc-example"><strong>No jogo:</strong> Quando o personagem diz "acho que sou diferente" ou "ninguém me leva a sério" — é o estigma falando.</div><div class="cc-author">Erving Goffman, Estigma (1963)</div></div></div>
+      <div class="concept-card cc-direitos"><div class="cc-inner"><div class="cc-tag">Normativa</div><div class="cc-title serif">Direitos Humanos das PCDs</div><div class="cc-def">Conjunto de garantias legais que asseguram às PCDs o direito à educação, saúde, trabalho, família, cidade acessível e vida independente em igualdade. Não são favores: são obrigações do Estado.</div><div class="cc-example"><strong>No jogo:</strong> LBI (2015), Convenção ONU (2006), ECA, Lei de LIBRAS e Lei de Cotas.</div><div class="cc-author">LBI 13.146/2015 · Decreto 6.949/2009</div></div></div>
+      <div class="concept-card cc-institucional"><div class="cc-inner"><div class="cc-tag">Foucault</div><div class="cc-title serif">Violência Institucional</div><div class="cc-def">Quando as próprias instituições produzem dano, exclusão ou violação por meio de suas práticas e normas. Não precisa haver intenção maliciosa para ser violência.</div><div class="cc-example"><strong>No jogo:</strong> O médico que fala com a filha, não com o paciente. A delegacia sem intérprete. A escola que diz "sempre foi assim".</div><div class="cc-author">Foucault (1975) · Análise Institucional</div></div></div>
+      <div class="concept-card cc-autonomia"><div class="cc-inner"><div class="cc-tag">Ética Profissional</div><div class="cc-title serif">Autonomia</div><div class="cc-def">O direito de todo ser humano de tomar suas próprias decisões sobre sua vida. Na psicologia, autonomia significa atuar COM o sujeito, não por ele — mesmo quando você acha que sabe o que é melhor.</div><div class="cc-example"><strong>No jogo:</strong> Quando a alternativa age "pelo bem da PCD" sem consultá-la — viola a autonomia, mesmo com boa intenção.</div><div class="cc-author">CFP, Código de Ética, Princípio I · LBI, Art. 6º</div></div></div>
+      <div class="concept-card cc-exclusao"><div class="cc-inner"><div class="cc-tag">Sociologia</div><div class="cc-title serif">Exclusão Social</div><div class="cc-def">Processo pelo qual indivíduos são impedidos de participar plenamente da vida social. Para PCDs, a exclusão é produzida por ausências: sem rampa, sem intérprete, sem adaptação, sem reconhecimento.</div><div class="cc-example"><strong>No jogo:</strong> A cidade que Beatriz não consegue percorrer. O trabalho que Carlos não consegue acessar.</div><div class="cc-author">Castel (1991) · Modelo Social da Deficiência</div></div></div>
+    </div>
+    <div class="page-nav">
+      <button class="btn btn-primary" onclick="startGame()">Estou pronto(a) — Iniciar o jogo →</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-scoring')">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div class="hud" id="hud" style="display:none">
+  <div class="hud-left">
+    <span class="hud-logo serif">Caminhos <em>Possíveis</em></span>
+    <div class="hud-sep"></div>
+    <span class="hud-scenario" id="hud-scenario">Caso 1 / 15</span>
+  </div>
+  <div class="hud-right">
+    <div class="hud-axes">
+      <div class="ax-mini" title="Escuta Qualificada"><div class="ax-bar"><div class="ax-fill" id="ax0-bar" style="width:0%;background:#8b6cf0"></div></div><div class="ax-label">🎧</div></div>
+      <div class="ax-mini" title="Garantia de Direitos"><div class="ax-bar"><div class="ax-fill" id="ax1-bar" style="width:0%;background:#3eb87a"></div></div><div class="ax-label">⚖️</div></div>
+      <div class="ax-mini" title="Atuação Institucional"><div class="ax-bar"><div class="ax-fill" id="ax2-bar" style="width:0%;background:#d4943a"></div></div><div class="ax-label">🏛️</div></div>
+      <div class="ax-mini" title="Sensibilidade Ética"><div class="ax-bar"><div class="ax-fill" id="ax3-bar" style="width:0%;background:#c4a44a"></div></div><div class="ax-label">🧭</div></div>
+      <div class="ax-mini" title="Compreensão Social"><div class="ax-bar"><div class="ax-fill" id="ax4-bar" style="width:0%;background:#3ab8b0"></div></div><div class="ax-label">🔗</div></div>
+    </div>
+    <div class="hud-xp"><strong id="hud-xp">0</strong> XP</div>
+    <div class="hud-level" id="hud-level">Estagiário(a)</div>
+  </div>
+</div>
+
+<!-- SCREEN GAME -->
+<div class="screen" id="screen-game">
+  <div class="game-header">
+    <span style="font-size:11px;color:var(--dim);white-space:nowrap;font-family:'DM Mono',monospace" id="game-num">Caso 1 de 15</span>
+    <div class="game-progress"><div class="game-progress-fill" id="game-prog" style="width:6.67%"></div></div>
+    <div class="ctx-tag" id="ctx-tag">Escola</div>
+  </div>
+  <div class="voice-card">
+    <div class="voice-header">
+      <div class="avatar" id="char-avatar">👩</div>
+      <div class="char-info"><div class="char-name" id="char-name">—</div><div class="char-desc" id="char-desc">—</div></div>
+    </div>
+    <div class="voice-quote" id="char-voice">—</div>
+  </div>
+  <div class="scenario-card">
+    <h2 class="scenario-title" id="sc-title">—</h2>
+    <p class="scenario-text" id="sc-text">—</p>
+    <div class="risk-pill"><div class="risk-dot"></div><span id="sc-risk">—</span></div>
+  </div>
+  <div class="role-card">
+    <div class="role-icon">🧠</div>
+    <div class="role-text" id="sc-role">—</div>
+  </div>
+  <div class="choices-label">Qual é a sua intervenção?</div>
+  <button class="choice-btn" id="choice-A" onclick="choose('A')"><div class="choice-letter">A</div><div class="choice-text" id="choice-A-text">—</div></button>
+  <button class="choice-btn" id="choice-B" onclick="choose('B')"><div class="choice-letter">B</div><div class="choice-text" id="choice-B-text">—</div></button>
+  <button class="choice-btn" id="choice-C" onclick="choose('C')"><div class="choice-letter">C</div><div class="choice-text" id="choice-C-text">—</div></button>
+  <div class="feedback-panel" id="feedback-panel">
+    <div class="fb-header"><div class="fb-icon" id="fb-icon">✅</div><div class="fb-result" id="fb-result">—</div></div>
+    <div class="voice-reaction" id="fb-voice-reaction"><div class="vr-label">Reação do personagem</div><span id="fb-vr-text">—</span></div>
+    <p class="fb-explanation" id="fb-explanation">—</p>
+    <div class="fb-concept" id="fb-concept">—</div>
+    <div class="consequence-block" id="fb-consequence"><div class="c-label">📅 Semanas depois...</div><span id="fb-consequence-text">—</span></div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="xp-badge" id="fb-xp">+0 XP</div>
+      <div class="axes-gained" id="fb-axes-gained"></div>
+    </div>
+    <br>
+    <button class="btn-next" id="btn-next" onclick="nextScenario()">Próximo caso →</button>
+  </div>
+</div>
+
+<!-- SCREEN 9 — FINAL -->
+<div class="screen" id="screen-end">
+  <div class="end-wrap">
+    <div class="end-trophy" id="end-trophy">🏅</div>
+    <h1 class="end-title serif" id="end-title">Jornada concluída!</h1>
+    <p class="end-sub" id="end-sub">—</p>
+    <div class="end-grid">
+      <div class="end-stat"><div class="ev" id="end-xp">0</div><div class="el">XP Total</div></div>
+      <div class="end-stat"><div class="ev" id="end-level" style="font-size:1rem;padding-top:.5rem">—</div><div class="el">Nível Final</div></div>
+      <div class="end-stat"><div class="ev" id="end-correct">0/15</div><div class="el">Decisões Ideais</div></div>
+    </div>
+    <div class="axes-report">
+      <h3>Seu Perfil de Formação</h3>
+      <div class="ax-report-row"><div class="ar-icon">🎧</div><div class="ar-name">Escuta Qualificada</div><div class="ar-bar"><div class="ar-fill" id="ar0" style="width:0%"></div></div><div class="ar-val" id="arv0">0%</div></div>
+      <div class="ax-report-row"><div class="ar-icon">⚖️</div><div class="ar-name">Garantia de Direitos</div><div class="ar-bar"><div class="ar-fill" id="ar1" style="width:0%;background:var(--green)"></div></div><div class="ar-val" id="arv1">0%</div></div>
+      <div class="ax-report-row"><div class="ar-icon">🏛️</div><div class="ar-name">Atuação Institucional</div><div class="ar-bar"><div class="ar-fill" id="ar2" style="width:0%;background:var(--amber)"></div></div><div class="ar-val" id="arv2">0%</div></div>
+      <div class="ax-report-row"><div class="ar-icon">🧭</div><div class="ar-name">Sensibilidade Ética</div><div class="ar-bar"><div class="ar-fill" id="ar3" style="width:0%;background:var(--gold)"></div></div><div class="ar-val" id="arv3">0%</div></div>
+      <div class="ax-report-row"><div class="ar-icon">🔗</div><div class="ar-name">Compreensão Social</div><div class="ar-bar"><div class="ar-fill" id="ar4" style="width:0%;background:var(--teal)"></div></div><div class="ar-val" id="arv4">0%</div></div>
+    </div>
+    <div class="end-message" id="end-message">—</div>
+    <div class="end-rights">
+      <h3>Direitos abordados nesta jornada</h3>
+      <ul>
+        <li>Educação inclusiva e adaptações razoáveis (LBI, Art. 28)</li>
+        <li>Trabalho sem discriminação — lei de cotas (LBI, Art. 34)</li>
+        <li>Saúde igualitária e acessível (LBI, Art. 18)</li>
+        <li>Vida independente e participação na comunidade (Convenção ONU, Art. 19)</li>
+        <li>Proteção contra violência intrafamiliar (ECA · Estatuto do Idoso)</li>
+        <li>Autonomia e Tomada de Decisão Apoiada (LBI, Art. 116)</li>
+        <li>Combate ao bullying escolar (Lei 13.185/2015)</li>
+        <li>Comunicação em LIBRAS em serviços públicos (Lei 10.436/2002)</li>
+        <li>Saúde mental e direitos civis (Lei 10.216/2001)</li>
+        <li>Maternidade e direitos reprodutivos das PCDs (LBI, Art. 6º)</li>
+        <li>Proteção interseccional — raça, classe e deficiência</li>
+        <li>Adaptação razoável no trabalho (LBI, Art. 3º)</li>
+        <li>Acesso à justiça para pessoas com deficiência</li>
+      </ul>
+    </div>
+    <div class="end-btns">
+      <button class="btn btn-primary" onclick="restartGame()">Jogar novamente</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-welcome')">Tela inicial</button>
+    </div>
+<script>
+const SCENARIOS=[
+{id:1,context:"Escola",contextClass:"tag-escola",avatar:"👩",name:"Ana Luíza, 14 anos",desc:"Estudante com paralisia cerebral — usa cadeira de rodas",
+voice:'"Tentei subir as escadas com ajuda uma vez. Caí na frente de todo mundo. Depois disso, eu parei de tentar."',
+title:"A escola que exclui sem perceber",
+text:"Ana Luíza estuda numa escola pública e é uma aluna dedicada. O laboratório de informática fica no segundo andar — sem elevador — e as aulas de educação física acontecem numa quadra com degraus de acesso. A direção alega que 'sempre foi assim' e que 'reformas agora são inviáveis'. Ana passou um mês sem participar dessas atividades. A mãe relata que a vê cada vez mais retraída, evitando contar aos colegas o motivo das ausências.",
+risk:"Exclusão social, violação do direito à educação inclusiva e dano à identidade da aluna",
+role:"<strong>Você é psicólogo(a) escolar.</strong> Acompanha Ana e foi procurado(a) pela mãe. Tem ciência da situação e precisa decidir como atuar.",
+choices:{
+A:"Iniciar acompanhamento psicológico individual com Ana, focando no fortalecimento da autoestima e no desenvolvimento de estratégias para lidar com as situações de exclusão no ambiente escolar.",
+B:"Conversar com a direção da escola sobre a situação de Ana, apresentando os impactos emocionais observados e solicitando que se estude a viabilidade de adaptações para as atividades.",
+C:"Elaborar relatório psicológico documentando os impactos da inacessibilidade no desenvolvimento de Ana, apresentá-lo formalmente ao Conselho Escolar e articular com instâncias externas caso a escola não adote medidas concretas."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Alguém finalmente colocou no papel o que eu estava sentindo. Talvez agora ouçam."',reactionType:"c-good",
+explanation:"A atuação do(a) psicólogo(a) escolar vai além do atendimento individual. Ao documentar o impacto psicossocial da inacessibilidade e acionar o Conselho Escolar, você atua na raiz do problema — a barreira estrutural — e não apenas nos seus efeitos emocionais. Isso está alinhado ao Código de Ética do CFP, que prevê compromisso com a eliminação de toda forma de discriminação.",
+concept:"<strong>Estigma (Goffman, 1963):</strong> A retirada de Ana das atividades sem explicação reforça o estigma da deficiência como 'incompatibilidade' com o ambiente escolar. A psicologia social compreende que o problema não é a deficiência — são as barreiras produzidas socialmente.",
+consequence:"Dois meses depois, o Conselho Escolar votou pela instalação de rampa provisória. Ana voltou ao laboratório e apresentou seu projeto no final do semestre. Na última sessão disse: 'Quando a rampa ficou pronta eu chorei. De raiva de ter demorado tanto.'",
+consequenceType:"c-good",xp:100,axes:[1,0,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Disseram que iam ver o que podiam fazer. É a mesma coisa que antes."',reactionType:"c-mid",
+explanation:"Conversar com a direção é um passo relevante, mas uma solicitação informal tem muito menos força do que um relatório formal. Sem documentação e sem acionar instâncias deliberativas, a mudança depende da boa vontade da gestão — sem obrigatoriedade.",
+concept:"<strong>Modelo Social da Deficiência:</strong> A deficiência não é problema do indivíduo, mas resultado da interação entre limitações e barreiras criadas pela sociedade. A solução exige mudança estrutural, não boa vontade informal.",
+consequence:"A direção prometeu 'avaliar as condições'. Três meses depois, nada havia mudado. Ana continuava ausente das atividades. A mãe procurou um advogado.",
+consequenceType:"c-mid",xp:30,axes:[0,0,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Aprendi a lidar. Mas continuo não entrando no laboratório."',reactionType:"c-bad",
+explanation:"O acompanhamento individual tem valor terapêutico, mas atuar apenas nessa frente responsabiliza a estudante por um problema estrutural que não é dela. A LBI define que a escola tem obrigação legal de garantir acessibilidade.",
+concept:"<strong>LBI, Art. 28:</strong> Incumbe ao poder público assegurar o sistema educacional inclusivo em todos os níveis, garantindo adaptações razoáveis e eliminação de barreiras.",
+consequence:"Ana aprendeu a 'aceitar' as limitações da escola. No ano seguinte, não se inscreveu para o projeto de robótica: 'achei que não era para mim.' O laboratório continuava inacessível.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:2,context:"Trabalho",contextClass:"tag-trabalho",avatar:"👨",name:"Carlos, 32 anos",desc:"Profissional com deficiência auditiva — fluente em LIBRAS",
+voice:'"Fui aprovado em todas as etapas. Reprovado na última. Três vezes. Eles nunca explicam por quê. Mas eu sei."',
+title:"O processo seletivo que nunca chegou",
+text:"Carlos é formado em logística e está desempregado há 8 meses. Já passou por três processos seletivos em empresas com obrigação legal de preencher cotas de PCDs. Em todos, foi eliminado após a entrevista, sem feedback. Na última empresa, soube por um colega que o gestor comentou que 'não saberia como se comunicar com ele' e que 'a equipe não está preparada'. Carlos chegou até você relatando se sentir 'invisível e incapaz'.",
+risk:"Discriminação no trabalho, violação da Lei de Cotas, dano à autoestima e identidade profissional",
+role:"<strong>Você é psicólogo(a) organizacional</strong> em uma clínica de apoio ao trabalhador. Carlos chega ao seu consultório após as recusas.",
+choices:{
+A:"Realizar escuta qualificada com Carlos, trabalhar o impacto emocional das rejeições e orientá-lo sobre como apresentar sua comunicação de forma mais estratégica nas próximas entrevistas.",
+B:"Acolher Carlos, realizar escuta qualificada, emitir laudo psicológico sobre o impacto das rejeições e orientá-lo sobre a possibilidade de ação trabalhista por discriminação, articulando encaminhamento jurídico com seu consentimento.",
+C:"Acolher Carlos, elaborar laudo psicológico documentando o dano sofrido e — junto com ele — acionar formalmente o Ministério Público do Trabalho e organizações de defesa das PCDs para responsabilização das empresas."
+},
+correct:"B",neutral:"A",wrong:"C",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Finalmente alguém não me perguntou o que eu fiz de errado. Perguntou o que fizeram de errado comigo."',reactionType:"c-good",
+explanation:"A atuação integrativa — escuta, documentação clínica e articulação jurídica com o consentimento de Carlos — é a resposta mais completa. O laudo tem valor probatório numa ação trabalhista. O(a) psicólogo(a) atua no cuidado individual e na garantia de direitos sem agir no lugar do sujeito.",
+concept:"<strong>Capacitismo:</strong> A fala do gestor revela a crença de que PCDs são menos adaptáveis — discriminação estrutural que produz exclusão no mercado e dano à identidade. (Sen, 2010 — Abordagem das Capacidades)",
+consequence:"Com o laudo em mãos, Carlos entrou com ação trabalhista. Quatro meses depois, foi contratado por outra empresa que solicitou intérprete para a entrevista. 'Pela primeira vez fui avaliado pelo que sei, não pelo que não ouvem.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Vou tentar falar mais devagar. Talvez ajude. Não sei."',reactionType:"c-mid",
+explanation:"A escuta e o suporte emocional são necessários, mas insuficientes. Orientar Carlos sobre 'apresentação estratégica' foca nele como variável a ser ajustada — quando o problema são as práticas discriminatórias das empresas.",
+concept:"<strong>Lei 8.213/91 — Lei de Cotas:</strong> Empresas com 100+ funcionários devem preencher 2% a 5% dos cargos com PCDs. A recusa sistemática configura infração administrativa.",
+consequence:"Carlos continuou tentando. Ajustou sua comunicação. Foi reprovado nas duas próximas entrevistas. A lei continuou sendo descumprida sem consequência.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,0,0]},
+C:{type:"wrong",result:"Viola a autonomia — +0 XP",icon:"❌",
+reaction:'"Não pedi para ninguém fazer isso por mim. Queria ser consultado."',reactionType:"c-bad",
+explanation:"Acionar o MPT sem que Carlos esteja no centro da decisão viola sua autonomia. A atuação deve ser com o sujeito, não por ele. Carlos pode não querer exposição pública ou processo longo neste momento.",
+concept:"<strong>Código de Ética do CFP, Princípio I:</strong> O psicólogo respeita a liberdade e a autonomia do ser humano — incluindo o direito de decidir quando e como buscar reparação.",
+consequence:"Carlos ficou desconfortável com as notificações. Pediu para encerrar. 'Fiquei com a sensação de que mais uma vez decidiram por mim.'",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:3,context:"Saúde",contextClass:"tag-saude",avatar:"👴",name:"Seu Raimundo, 58 anos",desc:"Homem com deficiência intelectual leve — mora com a filha",
+voice:'"Tentei falar da dor. A médica olhou pra minha filha e perguntou: ele toma os remédios direito? Eu estava ali. Eu entendo tudo."',
+title:"O paciente que ninguém ouve",
+text:"Raimundo é levado pela filha ao UBS para consultas frequentes por dores crônicas. Em todas, os médicos direcionam perguntas apenas à filha, ignorando Raimundo mesmo quando ele tenta falar. A médica disse à filha: 'ele provavelmente não consegue descrever bem o que sente'. Raimundo chegou a você visivelmente angustiado: sente que é 'tratado como criança' e que 'ninguém me escuta'. A filha, com boa intenção, concorda com a abordagem médica.",
+risk:"Violação da autonomia, infantilização, exclusão do cuidado em saúde e dano à dignidade",
+role:"<strong>Você é psicólogo(a) no NASF-AB.</strong> Atende Raimundo e tem vínculo com a equipe da UBS. Precisa decidir como agir.",
+choices:{
+A:"Realizar sessões individuais com Raimundo para trabalhar sua expressão verbal e prepará-lo melhor para as consultas médicas, ajudando-o a articular seus sintomas de forma mais clara.",
+B:"Acolher Raimundo, valorizar sua narrativa e conversar informalmente com a médica sobre a importância de incluí-lo nas consultas.",
+C:"Realizar escuta ativa com Raimundo como protagonista, elaborar plano terapêutico centrado nele e conduzir matriciamento formal com a equipe da UBS — apresentando orientações técnicas sobre comunicação inclusiva com PCDs."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Você me olhou quando eu entrei. Isso já foi diferente de tudo que aconteceu lá dentro."',reactionType:"c-good",
+explanation:"O matriciamento é o espaço formal do NASF para transformar práticas institucionais. Ao colocar Raimundo como protagonista e trabalhar com a equipe a partir de orientação técnica estruturada, você atua na causa — não apenas nos efeitos.",
+concept:"<strong>Convenção da ONU sobre Direitos das PCDs, Art. 25:</strong> As pessoas com deficiência têm direito ao mais alto padrão de saúde. Os serviços devem ser prestados com base no consentimento livre e esclarecido do próprio paciente.",
+consequence:"Três meses após o matriciamento, a médica passou a aguardar a resposta de Raimundo antes de falar com a filha. Ele descreveu as dores com precisão. O diagnóstico foi ajustado. 'Finalmente me trataram como gente.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"A médica foi mais gentil dessa vez. Mas ainda falou mais com minha filha do que comigo."',reactionType:"c-mid",
+explanation:"Acolher Raimundo e conversar com a médica são passos válidos. Mas a conversa informal não transforma a prática institucional. Sem registro técnico e sem incluir toda a equipe, a mudança depende da receptividade de uma profissional.",
+concept:"<strong>Infantilização da Deficiência:</strong> Tratar adultos com deficiência intelectual como incapazes de se expressar é violência simbólica. A deficiência intelectual leve não impede a comunicação — impede que outros escutem.",
+consequence:"A médica ficou mais atenta na próxima consulta. Mas sem orientação formal, o padrão voltou. 'Não mudou nada de verdade.'",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Vou tentar falar mais rápido da próxima vez. Pra não dar trabalho."',reactionType:"c-bad",
+explanation:"Preparar Raimundo para se comunicar melhor responsabiliza quem está sendo excluído pela falha de quem exclui. A dificuldade não é de Raimundo — é da equipe que não adota comunicação inclusiva.",
+concept:"<strong>LBI, Art. 18:</strong> É assegurada atenção integral à saúde da pessoa com deficiência em todos os níveis, garantindo acesso universal e igualitário.",
+consequence:"Raimundo aprendeu a resumir queixas em frases curtas. A médica continuou ignorando-o. Um sintoma que ele tentava descrever revelou ser o início de um problema maior — que poderia ter sido identificado antes.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:4,context:"Espaço Público",contextClass:"tag-publico",avatar:"👩‍🦯",name:"Beatriz, 27 anos",desc:"Mulher com deficiência visual — usa bengala de orientação",
+voice:'"Caí duas vezes no mesmo buraco. Não é negligência minha — é negligência da prefeitura. Mas quem fica em casa sou eu."',
+title:"A cidade que não foi feita para mim",
+text:"Beatriz mora sozinha, trabalha como advogada e é ativa nas redes sociais falando sobre acessibilidade urbana. Nos últimos meses, calçadas com buracos, semáforos sem sinal sonoro e ausência de piso tátil a fizeram cair duas vezes. Ela passou a sair menos de casa, recusou um convite de trabalho e se vê 'presa'. Relata: 'não é meu corpo o problema — é a cidade'. Um grupo comunitário a encaminhou ao serviço de psicologia onde você atua.",
+risk:"Isolamento social progressivo, perda de autonomia e violação do direito à cidade acessível",
+role:"<strong>Você é psicólogo(a) social</strong> no CRAS. Beatriz chegou ao serviço.",
+choices:{
+A:"Realizar atendimento psicológico com Beatriz, trabalhando o impacto emocional do isolamento e desenvolvendo estratégias de manejo da ansiedade relacionada ao deslocamento urbano.",
+B:"Acolher Beatriz, validar sua análise sobre as barreiras urbanas e, junto com ela, construir um plano de ação: orientação sobre canais de denúncia e fortalecimento da rede de apoio pessoal.",
+C:"Reconhecer a análise de Beatriz como tecnicamente correta, oferecer suporte emocional, articulá-la com movimentos locais de PCDs, orientá-la sobre o MP como canal de denúncia das barreiras e propor ações coletivas de educação em direitos."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Pela primeira vez alguém concordou que o problema é da cidade. E me ajudou a fazer algo a respeito."',reactionType:"c-good",
+explanation:"Beatriz já tem clareza sobre a causa — ela não precisa de manejo individual. A atuação do(a) psicólogo(a) social é fortalecer sua luta, ampliar sua rede e transformar o sofrimento individual em ação coletiva.",
+concept:"<strong>Psicologia Comunitária (Montero, 2004):</strong> A intervenção busca a conscientização, o fortalecimento (empowerment) e a transformação das condições que produzem sofrimento — não apenas o tratamento dos seus efeitos.",
+consequence:"Beatriz se articulou com o movimento local de PCDs. Uma ação civil pública foi protocolada no MP. Dois semáforos receberam sinal sonoro. 'A cidade ainda não está certa. Mas eu parei de me encolher.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Pelo menos me ajudaram a denunciar. Mas sinto que ainda é só eu contra tudo."',reactionType:"c-mid",
+explanation:"Orientar sobre canais de denúncia e fortalecer a rede pessoal são passos relevantes, mas ainda centrados em Beatriz como indivíduo. A dimensão coletiva é o que transforma a intervenção de pontual para sistêmica.",
+concept:"<strong>Lei 10.098/2000 e NBR 9050:</strong> Estabelecem normas para acessibilidade em espaços públicos. O descumprimento pode ser denunciado ao MP via ação civil pública.",
+consequence:"Beatriz fez as denúncias. A prefeitura respondeu que 'providências serão tomadas'. Nada mudou. 'Fiz o que me disseram. Mas sozinha não adianta.'",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Aprendi a respirar fundo antes de sair. Mas o buraco ainda está lá."',reactionType:"c-bad",
+explanation:"Beatriz disse que o problema não é dela — é a cidade. Propor manejo da ansiedade pode reforçar a ideia de que ela precisa se adaptar a um ambiente que viola seus direitos.",
+concept:"<strong>Modelo Social da Deficiência:</strong> A deficiência emerge da interação entre a pessoa e as barreiras sociais. Tratar como questão individual o que é responsabilidade do Estado é adotar o modelo médico.",
+consequence:"Beatriz usou as técnicas de manejo. Continuou saindo menos. O buraco na calçada fez mais uma vítima — outra pessoa com deficiência visual, três semanas depois.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:5,context:"Família",contextClass:"tag-familia",avatar:"🧒",name:"Miguel, 9 anos",desc:"Criança com Transtorno do Espectro Autista (TEA) — nível 2",
+voice:'"Quando tem muito barulho, eu grito. Aí me batem. Aí eu grito mais. Não entendo por que fazem assim."',
+title:"O filho que os pais não entendem",
+text:"Os pais de Miguel o trouxeram ao serviço após a escola relatar que ele 'não obedece' e 'perturba'. Em casa, os pais descrevem Miguel como 'teimoso' e dizem que precisam bater nele para que os ouça. Miguel tem crises sensoriais intensas quando há muito barulho ou mudança de rotina. Os pais acreditam que 'falta limite'. A mãe chora e diz que não sabe mais o que fazer. Miguel chegou em silêncio, sem contato visual, abraçando um brinquedo.",
+risk:"Violência doméstica contra PCD, ausência de suporte familiar e violação do direito ao desenvolvimento saudável",
+role:"<strong>Você é psicólogo(a) infantil</strong> num CAPS Infantojuvenil. É o primeiro atendimento de Miguel.",
+choices:{
+A:"Iniciar atendimento individual com Miguel, focando no desenvolvimento de habilidades de comunicação e autorregulação, e orientar os pais sobre TEA em sessões paralelas.",
+B:"Realizar sessões de orientação parental com foco em psicoeducação sobre TEA, sem ainda abordar diretamente o relato de violência física.",
+C:"Realizar escuta acolhedora com toda a família, psicoeducar os pais sobre TEA e funcionamento sensorial, incluí-los como parceiros do cuidado e notificar o Conselho Tutelar pelo relato de violência física, mantendo o atendimento ativo durante o processo."
+},
+correct:"C",neutral:"A",wrong:"B",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"A psicóloga conversou muito com minha mãe. Ela parou de me bater. Acho que ela entendeu." — Miguel',reactionType:"c-good",
+explanation:"A psicoeducação familiar é fundamental no TEA. A notificação ao Conselho Tutelar é obrigação legal diante de violência contra criança (ECA, Art. 13) — e deve ser feita sem abandonar o vínculo com a família. Omitir a notificação para 'preservar o vínculo' é violação ética.",
+concept:"<strong>ECA, Art. 13:</strong> Profissionais de saúde têm obrigação legal de comunicar ao Conselho Tutelar qualquer confirmação de violência contra crianças e adolescentes, incluindo violência física.",
+consequence:"A notificação levou a uma reunião com o Conselho Tutelar. Os pais receberam suporte em vez de punição. Com a psicoeducação, a mãe parou de interpretar as crises como birra. Três meses depois, Miguel chegou à sessão segurando a mão do pai.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Aprendo a me acalmar. Mas em casa ainda é difícil." — Miguel',reactionType:"c-mid",
+explanation:"Atender Miguel e orientar os pais são passos válidos, mas o relato de violência física exige notificação obrigatória ao Conselho Tutelar — independente da intenção dos pais. Adiar para 'trabalhar o vínculo primeiro' é omissão de obrigação legal.",
+concept:"<strong>Abordagem Sistêmica:</strong> A família é um sistema. Intervir na criança e nos pais separadamente, sem integrar os deveres legais, é uma resposta incompleta diante da complexidade do caso.",
+consequence:"Miguel evoluiu em sessão. Em casa, as crises e punições continuaram. A notificação nunca foi feita. Seis meses depois, um episódio mais grave chamou a atenção da escola.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,0,1]},
+B:{type:"wrong",result:"Omissão legal — +0 XP",icon:"❌",
+reaction:'"Nada mudou em casa." — Miguel',reactionType:"c-bad",
+explanation:"Conduzir orientação parental sem acionar o Conselho Tutelar, após relato de violência física, é omissão de dever legal. Preservar o vínculo terapêutico não justifica deixar Miguel sem a proteção legal que lhe é devida.",
+concept:"<strong>Código de Ética do CFP, Art. 9º:</strong> É dever do psicólogo comunicar às autoridades competentes os casos que impliquem risco de vida — incluindo violência contra crianças.",
+consequence:"Os pais participaram das sessões, mas sem intervenção do Conselho, a violência não foi interrompida. Miguel continuou sofrendo punições físicas. A oportunidade de proteção foi perdida.",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:6,context:"Justiça",contextClass:"tag-justica",avatar:"👩",name:"Fernanda, 34 anos",desc:"Mulher com deficiência psicossocial — esquizofrenia em remissão",
+voice:'"Meu irmão decide onde eu moro, com quem falo, o que faço com meu dinheiro. Dizem que é para meu bem. Mas ninguém me perguntou o que é bom pra mim."',
+title:"A curatela que virou prisão",
+text:"Fernanda tem esquizofrenia e está em remissão há dois anos com medicação. Seu irmão, curador nomeado, toma todas as decisões por ela: controla seu dinheiro, escolhe onde ela mora e proibiu que ela namorasse. Fernanda chegou ao CRAS em lágrimas: 'eu não sou louca, eu só tenho uma doença. Quero ter minha própria vida'. O irmão ameaça internação se ela 'desobedecer'.",
+risk:"Violação da autonomia, abuso de curatela e violência psicológica por familiar",
+role:"<strong>Você é psicólogo(a) no CREAS.</strong> Fernanda chega ao serviço espontaneamente.",
+choices:{
+A:"Realizar atendimento psicológico individual com Fernanda, fortalecendo sua autoestima e sua capacidade de comunicar seus desejos ao irmão de forma assertiva.",
+B:"Acolher Fernanda, reconhecer sua capacidade de autodeterminar-se e promover uma reunião familiar para mediar a relação com o irmão, buscando que ele conceda mais autonomia gradualmente.",
+C:"Acolher Fernanda, reconhecer sua capacidade de autodeterminar-se, orientá-la sobre a Tomada de Decisão Apoiada como alternativa legal à curatela total e articular encaminhamento à Defensoria Pública para revisão judicial da curatela."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Não sabia que existia uma lei que me protegia disso. Agora sei que tenho uma saída."',reactionType:"c-good",
+explanation:"A LBI criou a Tomada de Decisão Apoiada como alternativa à curatela total — preservando a autonomia da PCD. A curatela abusiva é violência com respaldo jurídico equivocado. Articular com a Defensoria é garantir acesso à justiça gratuita.",
+concept:"<strong>LBI, Art. 116 — Tomada de Decisão Apoiada:</strong> A pessoa com deficiência elege pessoas idôneas para lhe dar suporte nas decisões, preservando sua capacidade legal — diferente da curatela, que substitui a vontade da pessoa.",
+consequence:"Com apoio da Defensoria, o processo de revisão foi iniciado. Quatro meses depois, a curatela total foi substituída por Tomada de Decisão Apoiada. Fernanda voltou a trabalhar. 'Pela primeira vez em dois anos, abri minha própria conta bancária.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Meu irmão disse que vai pensar. Mas sei que nada vai mudar enquanto a lei der a ele esse poder."',reactionType:"c-mid",
+explanation:"A mediação familiar pode ter valor, mas coloca Fernanda e seu curador em 'negociação gradual', ignorando que ele usa um instrumento legal para exercer controle. A solução não é convencê-lo a ceder — é revisar juridicamente a curatela.",
+concept:"<strong>Convenção da ONU, Art. 12:</strong> Pessoas com deficiência gozam de capacidade legal em igualdade de condições. Os Estados devem oferecer apoio ao exercício da capacidade, não substituição da vontade.",
+consequence:"A reunião familiar ocorreu. O irmão prometeu 'mais liberdade'. Dois meses depois, voltou ao controle total. Sem revisão da curatela, a situação se repetiu.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Aprendi a ser mais assertiva. Mas a curatela continua lá. As palavras não mudam a lei."',reactionType:"c-bad",
+explanation:"Fortalecer a assertividade de Fernanda responsabiliza quem está sendo violada pela falha estrutural. Ela não tem dificuldade de se expressar — tem um curador que ignora sua vontade com respaldo formal.",
+concept:"<strong>Lei 10.216/2001 — Reforma Psiquiátrica:</strong> Garante às pessoas com transtornos mentais o direito à vida em liberdade e à preservação dos direitos civis.",
+consequence:"Fernanda expressou seus desejos com mais clareza. O irmão a ignorou — porque a curatela lhe dava esse poder. As habilidades individuais não mudaram a estrutura jurídica que sustentava o controle.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:7,context:"Escola",contextClass:"tag-escola",avatar:"👦",name:"Davi, 11 anos",desc:"Criança com deficiência intelectual — síndrome de Down",
+voice:'"Ninguém quer sentar do meu lado. No intervalo, fico sozinho. Acho que é porque sou diferente."',
+title:"A turma que não quer incluir",
+text:"Davi estuda numa escola regular inclusiva e tem professora de apoio. Porém, os colegas raramente o incluem nas brincadeiras — chamam-no de apelidos nas costas e evitam sentar perto. A professora titular ignora as situações por considerar que 'crianças são assim mesmo'. Davi passou a simular dor de barriga para não ir à escola.",
+risk:"Bullying por exclusão, dano à autoestima e violação do direito à educação inclusiva real",
+role:"<strong>Você é psicólogo(a) escolar</strong> com acesso à turma, à professora e à direção.",
+choices:{
+A:"Realizar atendimento individual com Davi para trabalhar autoestima e habilidades sociais, e conversar informalmente com a professora sobre a importância de mediar as interações.",
+B:"Atender Davi individualmente, comunicar os pais e sugerir que a escola organize uma atividade específica de integração entre Davi e os colegas.",
+C:"Atender Davi individualmente e, em paralelo, desenvolver intervenções estruturadas com toda a turma sobre diversidade, capacitar a professora com orientações técnicas sobre inclusão e registrar formalmente o caso como bullying por exclusão."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Hoje alguém sentou do meu lado sem que a professora mandasse. Foi a primeira vez."',reactionType:"c-good",
+explanation:"A exclusão de Davi é um fenômeno grupal, não individual. Intervir apenas com ele remedia o efeito, não a causa. A atuação escolar exige intervenções estruturadas no grupo-turma, formação técnica de professores e registro institucional obrigatório.",
+concept:"<strong>Lei 13.185/2015 — Lei do Bullying:</strong> Escolas têm obrigação de prevenir, tratar e registrar ocorrências. A exclusão sistemática de Davi configura bullying por exclusão.",
+consequence:"Com as intervenções na turma e o registro formal, o clima na sala mudou. A professora recebeu orientação técnica e passou a mediar as interações. Um mês depois, um colega pediu para trabalhar com Davi num projeto.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Fizemos uma atividade juntos. Mas no intervalo, tudo voltou ao normal."',reactionType:"c-mid",
+explanation:"Comunicar os pais e propor uma atividade pontual são ações válidas, mas insuficientes. Uma única atividade de integração não transforma a dinâmica do grupo. O bullying por exclusão exige ações sistemáticas e registro formal.",
+concept:"<strong>Inclusão vs. Integração:</strong> Integração coloca a PCD numa escola comum sem mudar o ambiente. Inclusão transforma o ambiente para acolher a diversidade. Davi está integrado — mas não incluído.",
+consequence:"A atividade de integração funcionou por uma semana. Depois, os colegas voltaram a evitar Davi. Sem registro formal, a exclusão continuou sem responsabilização.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Aprendi a não ligar. Mas continuo sozinho no intervalo."',reactionType:"c-bad",
+explanation:"Atender Davi individualmente e fazer conversa informal com a professora coloca o problema na escala errada. Ensinar a Davi como se socializar responsabiliza quem está sendo excluído.",
+concept:"<strong>LBI, Art. 27:</strong> A educação constitui direito da pessoa com deficiência, assegurado sistema educacional inclusivo em todos os níveis.",
+consequence:"Davi aprendeu a 'não ligar'. Continuou sozinho. A professora não mudou suas práticas. No segundo semestre, Davi pediu para mudar de turma. O pedido foi negado.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:8,context:"Saúde",contextClass:"tag-saude",avatar:"👩",name:"Priya, 29 anos",desc:"Mulher com deficiência física adquirida — amputação de membro inferior",
+voice:'"O fisioterapeuta disse que tenho problema de motivação. Ele não perdeu uma perna. Eu não estou sem motivação. Estou em luto."',
+title:"O luto que ninguém valida",
+text:"Priya perdeu a perna direita em acidente há seis meses. Está em reabilitação física, mas recusa-se a usar a prótese. Não sai de casa, afastou-se dos amigos e diz: 'eu não sou mais eu'. A equipe de reabilitação fica frustrada pois ela 'não colabora' e o médico sugeriu que ela 'precisava de atitude positiva'. O fisioterapeuta a encaminhou dizendo que ela tem 'problema de motivação'.",
+risk:"Luto não elaborado, isolamento social, dano à identidade corporal e falta de suporte emocional adequado",
+role:"<strong>Você é psicólogo(a) no serviço de reabilitação</strong> de um hospital público. É sua primeira sessão com Priya.",
+choices:{
+A:"Realizar atendimento psicológico com Priya focado em recursos de enfrentamento e reengajamento gradual com a rotina, para que ela retome a reabilitação.",
+B:"Acolher o luto de Priya, reconhecê-lo como reação legítima e conduzir psicoterapia individual focada na reconstrução da identidade corporal, respeitando seu tempo emocional.",
+C:"Acolher o luto de Priya sem pressa, conduzir psicoterapia centrada na identidade corporal e realizar mediação com a equipe de reabilitação para que o tempo emocional seja incorporado ao plano terapêutico coletivo."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Você disse à equipe que meu luto não é obstáculo — é parte do processo. Pela primeira vez, eles pararam de me pressionar."',reactionType:"c-good",
+explanation:"O luto de Priya não é obstáculo à reabilitação — é parte dela. Conduzir psicoterapia centrada na identidade corporal E mediar com a equipe transforma o plano terapêutico. Sem essa mediação, psicologia e fisioterapia operam em lógicas opostas.",
+concept:"<strong>Luto e Identidade Corporal:</strong> A perda de um membro implica reconfiguração da autoimagem. O luto (Kübler-Ross) não pode ser pulado. Forçar aceitação prematura é iatrogenicamente prejudicial.",
+consequence:"Com o luto sendo respeitado pela equipe inteira, Priya começou a elaborar a perda no seu ritmo. Quatro meses depois, tocou a prótese pela primeira vez por vontade própria. 'Não sou mais quem eu era. Mas estou descobrindo quem sou agora.'",
+consequenceType:"c-good",xp:100,axes:[1,0,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Você entendeu o que estou sentindo. Mas a equipe continua me pressionando. Fico entre dois mundos."',reactionType:"c-mid",
+explanation:"Acolher o luto e conduzir psicoterapia são passos essenciais. O que falta é a articulação com a equipe — sem isso, o trabalho psicológico e o físico operam em contradição, e Priya fica no meio.",
+concept:"<strong>Psicologia da Reabilitação:</strong> A reabilitação não é apenas física. O(a) psicólogo(a) atua como mediador(a) entre o tempo do corpo e o tempo da mente.",
+consequence:"Priya evoluiu nas sessões. Mas fora delas, a pressão da equipe continuava. Os dois processos opostos geraram confusão que atrasou a reabilitação.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,1,1]},
+A:{type:"wrong",result:"Intervenção precipitada — +0 XP",icon:"❌",
+reaction:'"Disseram que eu precisava de atitude positiva. Você me fala em enfrentamento. É a mesma coisa com palavras diferentes."',reactionType:"c-bad",
+explanation:"Focar em reengajamento sem elaborar o luto inverte a ordem do cuidado. Priya não tem déficit de recursos — ela está em luto. Apressar a funcionalidade pode aprofundar o isolamento.",
+concept:"<strong>Escuta Clínica vs. Reabilitação Funcional:</strong> O(a) psicólogo(a) não opera na lógica da funcionalidade imediata. O tempo emocional e o tempo físico são distintos e precisam ser respeitados.",
+consequence:"Priya tentou as técnicas de enfrentamento. Pareciam-lhe vazias. Passou a recusar todos os atendimentos psicológicos: 'não faz diferença'.",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:9,context:"Trabalho",contextClass:"tag-trabalho",avatar:"👨",name:"Thiago, 41 anos",desc:"Funcionário público com deficiência visual progressiva",
+voice:'"Pedido de adaptação: 2 anos esperando. Resposta do RH: o sistema não permite. Promoções perdidas: 2. Alguém precisa colocar isso num documento oficial."',
+title:"A promoção que ficou presa na burocracia",
+text:"Thiago trabalha há 12 anos numa repartição pública e perdeu progressivamente a visão por glaucoma. Pediu adaptações ao RH: software de leitura de tela, documentos acessíveis, flexibilização de funções. O RH alega que 'o sistema não permite'. Nesse período, foi preterido em duas promoções por avaliações que exigiam leitura de documentos sem adaptação. Chegou ao ambulatório com ansiedade intensa.",
+risk:"Discriminação institucional, negação de adaptação razoável e violação do direito ao trabalho acessível",
+role:"<strong>Você é psicólogo(a) no ambulatório de saúde do trabalhador.</strong> Thiago chega com encaminhamento médico por ansiedade.",
+choices:{
+A:"Realizar psicoterapia com Thiago para manejo da ansiedade, orientá-lo a formalizar seus pedidos de adaptação por escrito e considerar afastamento temporário.",
+B:"Acolher Thiago, tratar a ansiedade e elaborar relatório psicológico estabelecendo nexo causal entre o adoecimento e as condições de trabalho, subsidiando ação junto à ouvidoria do órgão e orientando-o sobre o direito à adaptação razoável previsto na LBI.",
+C:"Acolher Thiago, elaborar relatório de nexo causal e acionar diretamente o MPT e a Defensoria Pública para que ele não precise percorrer sozinho as instâncias internas do órgão."
+},
+correct:"B",neutral:"A",wrong:"C",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Finalmente tenho um documento que diz que minha ansiedade não é fraqueza — é a resposta certa para o que me fazem."',reactionType:"c-good",
+explanation:"O adoecimento de Thiago tem causa identificada: discriminação institucional e negação de adaptação razoável. O relatório de nexo causal transforma o sofrimento individual em evidência institucional. Orientar Thiago a percorrer instâncias internas respeita sua autonomia e o processo administrativo.",
+concept:"<strong>LBI, Art. 3º — Adaptação Razoável:</strong> Modificações necessárias para assegurar à PCD o gozo de direitos em igualdade de condições — cuja negativa injustificada é discriminação.",
+consequence:"Com o relatório de nexo causal, Thiago formalizou reclamação na ouvidoria. Em três meses, o software de leitura de tela foi instalado. Na próxima avaliação de promoção, participou em igualdade de condições. Passou.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Minha ansiedade melhorou um pouco. Mas o RH continua dizendo que o sistema não permite."',reactionType:"c-mid",
+explanation:"Tratar a ansiedade e orientar a formalização são válidos, mas insuficientes. Sem o relatório de nexo causal, o sofrimento de Thiago permanece como problema individual — não como evidência de condição discriminatória.",
+concept:"<strong>Nexo Causal em Saúde do Trabalhador:</strong> O adoecimento psíquico por condições discriminatórias configura doença ocupacional. O(a) psicólogo(a) tem papel crucial em identificar e documentar esse nexo.",
+consequence:"Thiago manejou melhor a ansiedade. Mas sem o relatório de nexo causal, a situação no trabalho não mudou. Dois meses depois, perdeu mais uma promoção pelas mesmas condições.",
+consequenceType:"c-mid",xp:30,axes:[1,0,0,1,0]},
+C:{type:"wrong",result:"Pula etapas necessárias — +0 XP",icon:"❌",
+reaction:'"Não me consultaram antes de acionar o MPT. Fiquei exposto sem querer estar."',reactionType:"c-bad",
+explanation:"Acionar MPT e Defensoria sem que Thiago percorra as instâncias internas pula etapas e pode fragilizar juridicamente o caso. Agir por ele sem que decida a estratégia viola sua autonomia.",
+concept:"<strong>NR-17 e LBI:</strong> As condições de trabalho devem ser adaptadas às características dos trabalhadores. A negação de acessibilidade é condição discriminatória — mas a reparação exige procedimento.",
+consequence:"O processo externo começou sem que Thiago estivesse preparado. Ele sentiu que perdeu o controle da situação. 'Deviam ter me perguntado antes.'",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:10,context:"Espaço Público",contextClass:"tag-publico",avatar:"🧑",name:"Rafael, 19 anos",desc:"Jovem surdo — comunicação primária em LIBRAS",
+voice:'"Fui falar do crime que sofri. Saí sem conseguir. O BO tem coisas que eu nunca disse. E eu que me sinto criminoso."',
+title:"A delegacia que não tem intérprete",
+text:"Rafael foi vítima de furto e foi à delegacia registrar ocorrência. O delegado não chamou intérprete de LIBRAS, tentou comunicar-se por gestos e o boletim ficou com informações incorretas. Rafael foi embora sem conseguir registrar o que aconteceu. Ele procurou o CREAS onde você atua, dizendo que se sentiu 'invisível' e que 'nem crime que eu sofri eles acreditam direito'.",
+risk:"Negação de acesso à justiça e discriminação institucional por ausência de acessibilidade comunicacional",
+role:"<strong>Você é psicólogo(a) no CREAS.</strong> Rafael chega com raiva e frustração justificadas.",
+choices:{
+A:"Acolher Rafael, validar sua indignação e orientá-lo a retornar à delegacia solicitando formalmente o intérprete antes de registrar a queixa.",
+B:"Acolher Rafael, orientá-lo sobre o direito ao intérprete, redigir junto com ele uma reclamação formal à ouvidoria da Secretaria de Segurança e articular com a Defensoria Pública para que o BO seja refeito com intérprete certificado.",
+C:"Acolher Rafael, redigir a reclamação à ouvidoria, acionar a Defensoria e elaborar relatório psicológico documentando o impacto da violação para eventual ação judicial contra o Estado."
+},
+correct:"B",neutral:"A",wrong:"C",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Dessa vez não fui sozinho. E dessa vez foi diferente — um intérprete foi convocado."',reactionType:"c-good",
+explanation:"Orientar, redigir a reclamação formal e articular com a Defensoria é a resposta proporcional: ataca a falha institucional concreta sem ultrapassar o âmbito do serviço nem privar Rafael de protagonismo.",
+concept:"<strong>Lei 10.436/2002 — Lei de LIBRAS e Decreto 5.626/2005:</strong> Garantem o direito à comunicação em LIBRAS em órgãos públicos, incluindo delegacias. A ausência de intérprete é descumprimento legal.",
+consequence:"Com a reclamação formal e o apoio da Defensoria, Rafael retornou à delegacia com intérprete certificado. O BO foi refeito corretamente. A ouvidoria notificou a delegacia sobre o procedimento obrigatório.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Voltei. Pedi o intérprete. O delegado disse que não havia disponibilidade. Fui embora de novo."',reactionType:"c-mid",
+explanation:"Orientar Rafael a retornar e solicitar o intérprete é válido, mas coloca nele a responsabilidade de corrigir a falha institucional. Sem o suporte da reclamação formal e da Defensoria, Rafael vai sozinho a um ambiente que já o falhou.",
+concept:"<strong>Acessibilidade Comunicacional:</strong> O direito de ser compreendido em contextos institucionais sem depender de iniciativa própria para corrigir falhas do Estado.",
+consequence:"Rafael retornou à delegacia sozinho. O intérprete 'não havia disponibilidade'. Ele foi embora de novo. O crime ficou sem resolução.",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+C:{type:"wrong",result:"Desproporcional ao momento — +0 XP",icon:"❌",
+reaction:'"Queria registrar um BO. De repente virei parte de um processo que nem sei o que vai acontecer."',reactionType:"c-bad",
+explanation:"Elaborar relatório para ação judicial vai além do que a situação exige — e pode não ser o que Rafael quer. A prioridade é que ele consiga registrar o BO. Ações judiciais demandam decisão informada do sujeito.",
+concept:"<strong>Código de Ética do CFP, Princípio I:</strong> O psicólogo respeita a autonomia e o direito de autodeterminação. Agir além do consentido pode sobrecarregar com um processo que não foi pedido.",
+consequence:"Rafael ficou sobrecarregado com o processo judicial que não havia solicitado. Pediu para encerrar tudo. 'Só queria um BO. Virou uma coisa enorme.' O caso foi arquivado.",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:11,context:"Saúde",contextClass:"tag-saude",avatar:"👩",name:"Juliana, 23 anos",desc:"Jovem com transtorno bipolar — estável há um ano",
+voice:'"Quando eu me apresentava, dizia meu nome. Agora as pessoas me apresentam pelo diagnóstico. Esta é a Juliana, ela é bipolar."',
+title:"O diagnóstico que virou identidade",
+text:"Juliana teve primeiro episódio maníaco há um ano, foi internada e está estável, estudando e tomando medicação. Sua família passou a tratá-la como incapaz: não a deixam sair sozinha, monitoram suas conversas e recusaram assinar documentação para renovar sua habilitação. Na faculdade, um professor passou a excluí-la de apresentações 'para não sobrecarregar'. Juliana diz: 'todos me veem só como minha doença'.",
+risk:"Superproteção invalidante, estigma do diagnóstico, perda de autonomia e identidade reduzida à doença",
+role:"<strong>Você é psicólogo(a) clínico(a)</strong> no ambulatório onde Juliana faz acompanhamento.",
+choices:{
+A:"Acolher Juliana, trabalhar em sessões individuais a reconstrução da identidade além do diagnóstico e desenvolver estratégias de comunicação para negociar autonomia com a família gradualmente.",
+B:"Acolher Juliana, realizar sessões familiares de psicoeducação sobre transtorno bipolar e autonomia, e orientá-la sobre seus direitos civis — incluindo que o diagnóstico não impede legalmente a habilitação.",
+C:"Acolher Juliana, conduzir psicoeducação familiar, orientá-la sobre seus direitos civis e — com seu consentimento — comunicar formalmente ao professor sobre o dever institucional de não discriminação."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"A família parou de me tratar como uma bomba-relógio. E o professor voltou a me incluir. Sinto que sou Juliana de novo."',reactionType:"c-good",
+explanation:"A exclusão pelo professor é discriminação institucional — comunicá-la formalmente, com consentimento de Juliana, transforma o caso em demanda institucional. Psicoeducação familiar + orientação sobre direitos + ação sobre o professor abrangem todas as dimensões.",
+concept:"<strong>Lei 10.216/2001 — Reforma Psiquiátrica:</strong> Garante às pessoas com transtornos mentais direitos civis plenos, incluindo o direito à cidadania, ao trabalho e à vida em sociedade.",
+consequence:"A comunicação formal ao professor gerou reunião com a coordenação. Juliana voltou a participar das apresentações. A família, após psicoeducação, passou a tratar o diagnóstico como condição médica — não como identidade.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"A família melhorou. Mas o professor continua me excluindo. Metade do problema ficou sem solução."',reactionType:"c-mid",
+explanation:"A psicoeducação familiar e a orientação sobre direitos são essenciais. O que falta é a ação sobre o professor — uma violação institucional no espaço público acadêmico que permanece sem resposta.",
+concept:"<strong>Estigma em Saúde Mental:</strong> O estigma tem nível social (discriminação externa) e internalizado. A exclusão pelo professor é estigma institucionalizado — requer resposta formal.",
+consequence:"A família melhorou significativamente. Mas o professor continuou excluindo Juliana. Ela continuou perdendo apresentações e avaliações. A intervenção ficou incompleta.",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Trabalhei minha identidade aqui. Mas em casa e na faculdade, todo mundo ainda me vê pelo diagnóstico."',reactionType:"c-bad",
+explanation:"Trabalhar a identidade individualmente e ensinar estratégias de negociação coloca em Juliana a responsabilidade de reverter dinâmicas que ela não criou. O estigma é externo — exige resposta externa.",
+concept:"<strong>Identidade e Diagnóstico:</strong> O diagnóstico é ferramenta clínica, não identidade. Quando o sujeito é reduzido à patologia, opera-se violência simbólica que fragmenta a subjetividade.",
+consequence:"Juliana desenvolveu maior clareza sobre si mesma nas sessões. Mas na vida real, a família continuava controlando e o professor excluindo. 'Aqui dentro me sinto inteira. Lá fora, ainda sou o diagnóstico.'",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:12,context:"Família",contextClass:"tag-familia",avatar:"👩",name:"Dona Helena, 72 anos",desc:"Idosa com sequelas de AVC — hemiplegia leve, comunicação preservada",
+voice:'"Meus filhos venderam minha casa. Escolheram onde vou morar. Controlam meu dinheiro. Disseram que é para me proteger. Eu ainda existo."',
+title:"A voz que a família silenciou",
+text:"Dona Helena teve AVC há dois anos e ficou com hemiplegia leve. Caminha com bengala, fala com lentidão, mas é completamente capaz de se comunicar e tomar decisões. Seus filhos, sem consultá-la, venderam sua casa, internaram-na numa instituição de longa permanência e passaram a administrar seu INSS. Uma vizinha a trouxe ao CRAS, chorando: 'me tratam como se eu já tivesse morta'.",
+risk:"Violência patrimonial e psicológica, negação de autonomia e institucionalização forçada",
+role:"<strong>Você é psicólogo(a) no CRAS.</strong> Dona Helena chega com a vizinha. É a primeira vez que ela tem espaço para falar.",
+choices:{
+A:"Realizar escuta acolhedora, reconhecer sua capacidade decisória, orientá-la sobre seus direitos e, numa segunda etapa, convocar os filhos para reunião mediada em busca de consenso.",
+B:"Realizar escuta acolhedora, reconhecer sua plena capacidade decisória, orientá-la sobre seus direitos, notificar o MP como possível violência patrimonial e articular com a Defensoria para garantir que nenhuma decisão seja tomada sem seu consentimento.",
+C:"Realizar escuta, orientá-la sobre direitos, notificar o MP e, simultaneamente, oferecer suporte psicológico aos filhos para trabalhar o processo de luto antecipatório que pode estar motivando as decisões."
+},
+correct:"B",neutral:"A",wrong:"C",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Disseram que tenho direitos. Que ninguém pode decidir por mim sem me consultar. Parece óbvio. Mas ninguém havia dito isso antes."',reactionType:"c-good",
+explanation:"Dona Helena tem capacidade plena de decisão e está sofrendo violência patrimonial reconhecida pelo Estatuto do Idoso. A notificação ao MP e o acionamento da Defensoria garantem proteção por instâncias com poder para isso.",
+concept:"<strong>Estatuto do Idoso, Art. 19:</strong> Casos de violência contra idosos são de notificação compulsória. A violência patrimonial — administração indevida de bens sem consentimento — é crime.",
+consequence:"Com apoio da Defensoria, Dona Helena retomou o controle de seu INSS. A venda da casa foi questionada judicialmente. Ela foi transferida para uma residência de sua escolha. 'Provei que ainda existo.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"A reunião com meus filhos foi difícil. Eles disseram que me amam. Mas minha casa já foi vendida."',reactionType:"c-mid",
+explanation:"Acolher e orientar são passos certos. Mas a reunião de mediação sem notificação ao MP deixa a proteção jurídica de Helena pendente. Uma mediação sem respaldo legal pode resultar em acordo que ainda viola seus direitos.",
+concept:"<strong>Violência Intrafamiliar:</strong> Violência praticada por membros da família, mesmo com boas intenções, é violência. A relação afetiva não neutraliza o dano causado pela negação da autonomia.",
+consequence:"A reunião familiar gerou promessas. Os filhos disseram que iam 'reconsiderar'. Sem o MP acionado, a casa já havia sido vendida e o INSS continuou sob controle deles. 'Disseram que me ouviram. Mas nada mudou.'",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+C:{type:"wrong",result:"Desvio de prioridade — +0 XP",icon:"❌",
+reaction:'"Fiquei esperando enquanto vocês cuidavam dos meus filhos. Que cuidam de mim sem me ouvir."',reactionType:"c-bad",
+explanation:"Oferecer suporte aos filhos no mesmo momento em que Helena está sendo violada desloca o foco para quem pratica a violação. A prioridade clínica e ética é proteger Helena — não equilibrar as necessidades dos dois lados como equivalentes.",
+concept:"<strong>Convenção da ONU, Art. 16:</strong> Os Estados devem proteger PCDs contra violência, incluindo a praticada por membros da família.",
+consequence:"O suporte aos filhos ocupou o centro das sessões. Helena ficou em segundo plano. Seus direitos continuaram sendo violados. Meses depois, ela disse: 'Parece que eu vim aqui para ajudar eles.'",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:13,context:"Escola",contextClass:"tag-escola",avatar:"👧",name:"Lara, 16 anos",desc:"Adolescente com escoliose grave — usa colete ortopédico",
+voice:'"Postaram fotos minhas com apelidos. Parei de comer no refeitório. Às vezes penso em desaparecer. Não sei se é da escola ou de tudo."',
+title:"O corpo que virou alvo",
+text:"Lara usa colete ortopédico que dá volume à silhueta. Na escola, um grupo passou a chamá-la de apelidos e a postar memes com fotos dela. Ela passou a faltar às aulas, parou de comer no refeitório e revelou que pensa em 'desaparecer'. Pediu para você não contar nada à mãe porque ela 'já tem muitos problemas'.",
+risk:"Cyberbullying, sofrimento psíquico grave e possível ideação suicida",
+role:"<strong>Você é psicólogo(a) escolar.</strong> Lara está sob seus cuidados. A fala sobre 'desaparecer' acende um alerta imediato.",
+choices:{
+A:"Acolher Lara com cuidado, investigar o sentido de 'desaparecer' com perguntas empáticas, manter o sigilo enquanto avalia o nível de risco e monitorar de perto nas próximas sessões.",
+B:"Acolher Lara, investigar o sentido de 'desaparecer' de forma direta e empática e — diante de qualquer indicação de ideação suicida — acionar a família com Lara presente, explicando o motivo, e encaminhá-la para saúde mental especializada.",
+C:"Acolher Lara, realizar avaliação de risco imediata e — independentemente do resultado — acionar a família, notificar a direção sobre o bullying e encaminhar para saúde mental, priorizando segurança sobre vínculo terapêutico."
+},
+correct:"B",neutral:"A",wrong:"C",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Você me perguntou diretamente se eu pensava em me machucar. Nunca ninguém tinha perguntado assim. Aliviou."',reactionType:"c-good",
+explanation:"Avaliar o risco diretamente e de forma empática é o primeiro passo inegociável. Acionar a família COM Lara — explicando o motivo — preserva o vínculo enquanto cumpre a obrigação ética. O encaminhamento especializado é prioritário.",
+concept:"<strong>CFP, Código de Ética, Art. 9:</strong> É dever do psicólogo comunicar casos que envolvam risco de vida, devendo sempre informar o cliente sobre tal medida quando possível.",
+consequence:"A avaliação revelou ideação passiva. Lara foi encaminhada para o CAPS Infantojuvenil. A família foi acionada com ela presente e reagiu com apoio. O bullying foi registrado formalmente. Lara voltou a comer no refeitório dois meses depois.",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+A:{type:"partial",result:"Risco subestimado — +10 XP",icon:"⚠️",
+reaction:'"Você foi gentil. Mas saí sentindo que ia ficar para mim de novo. Como sempre."',reactionType:"c-mid",
+explanation:"Investigar e monitorar é cuidadoso, mas manter o sigilo diante de sinalização de ideação suicida é uma aposta arriscada. O código de ética não exige certeza absoluta para quebrar o sigilo — exige avaliação de risco.",
+concept:"<strong>Avaliação de Risco em Psicologia:</strong> Expressões como 'desaparecer' devem ser investigadas com perguntas diretas. Perguntar sobre suicídio não aumenta o risco — abre espaço de acolhimento.",
+consequence:"O monitoramento continuou. Na semana seguinte, Lara faltou à sessão. A mãe ligou preocupada — havia encontrado uma mensagem no celular da filha. A intervenção chegou atrasada.",
+consequenceType:"c-mid",xp:10,axes:[1,0,0,0,0]},
+C:{type:"wrong",result:"Rompe o vínculo — +0 XP",icon:"❌",
+reaction:'"Você ligou pra minha mãe sem me avisar. Agora não confio mais em ninguém."',reactionType:"c-bad",
+explanation:"Agir 'independentemente do resultado' e acionar a família sem incluir Lara rompe o vínculo terapêutico — que é também ferramenta de proteção. Confirmar o medo de Lara de que adultos não são confiáveis pode fechá-la definitivamente.",
+concept:"<strong>Vínculo Terapêutico:</strong> O vínculo é o principal instrumento do(a) psicólogo(a). Agir COM o sujeito, sempre que possível, preserva esse instrumento e aumenta a eficácia protetora.",
+consequence:"Lara soube que a mãe foi chamada sem aviso. Recusou-se a voltar às sessões. 'Falei coisas que não devia.' O bullying continuou sem registro. O atendimento psicológico foi interrompido quando mais era necessário.",
+consequenceType:"c-bad",xp:0,axes:[0,0,0,0,0]}
+}},
+{id:14,context:"Comunidade",contextClass:"tag-comunidade",avatar:"👨",name:"Josué, 45 anos",desc:"Homem negro com deficiência física — usa prótese na perna esquerda",
+voice:'"Sou negro, pobre e deficiente. Parece que fui feito para ser invisível. Cada parte de mim que alguém poderia ignorar, alguém ignora."',
+title:"A dupla invisibilidade",
+text:"Josué perdeu parte da perna num acidente de trabalho não registrado pelo empregador. Mora numa comunidade periférica sem acessibilidade urbana. Ao tentar entrar num programa municipal de geração de renda, foi informado que as aulas aconteciam num segundo andar sem elevador. Ao reclamar, o atendente respondeu: 'a gente não tem estrutura para todo mundo'. Josué procurou o CRAS.",
+risk:"Interseccionalidade de opressões, exclusão por múltiplas barreiras e negação de acesso a políticas públicas",
+role:"<strong>Você é psicólogo(a) no CRAS.</strong> Josué chega com raiva e cansaço acumulado.",
+choices:{
+A:"Realizar escuta empática, validar o sofrimento de Josué e encaminhá-lo ao setor de assistência social do CRAS para inserção em outros programas de geração de renda acessíveis.",
+B:"Realizar escuta aprofundada, nomear a dimensão interseccional do sofrimento de Josué e, junto com ele, mapear e acionar encaminhamentos múltiplos: ouvidoria municipal pelo programa inacessível, MPT pelo acidente de trabalho não registrado e redes de movimento de PCDs e coletivos negros locais.",
+C:"Realizar escuta aprofundada, nomear a interseccionalidade, acionar a ouvidoria municipal e encaminhar Josué para grupos de apoio comunitário — reservando o MPT para uma segunda etapa, quando Josué estiver mais fortalecido."
+},
+correct:"B",neutral:"C",wrong:"A",
+feedback:{
+B:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Pela primeira vez alguém viu tudo ao mesmo tempo. Não só a deficiência. Não só a cor. Tudo junto."',reactionType:"c-good",
+explanation:"O caso de Josué envolve interseccionalidade — raça, classe e deficiência se combinam para formas específicas de exclusão. Adiar o MPT para 'quando ele estiver mais fortalecido' pode significar nunca — e o acidente de trabalho tem prazo prescricional.",
+concept:"<strong>Interseccionalidade (Crenshaw, 1989):</strong> Raça, gênero, classe e deficiência não operam isoladamente — se cruzam e potencializam, criando experiências específicas de opressão que precisam ser enfrentadas simultaneamente.",
+consequence:"Com o MPT acionado, o acidente de trabalho foi documentado. A ouvidoria gerou notificação ao programa municipal. Josué foi inserido numa rede de PCDs negros. 'Encontrei pessoas que entenderam minha história sem eu precisar explicar cada pedaço.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+C:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Acionaram o programa. Mas o acidente de trabalho continua sem solução. E o prazo corre."',reactionType:"c-mid",
+explanation:"Nomear a interseccionalidade e acionar a ouvidoria são passos corretos. Reservar o MPT para uma 'segunda etapa' fragmenta a resposta — o acidente tem prazo prescricional que pode inviabilizar a reparação.",
+concept:"<strong>Psicologia Comunitária e Compromisso Social:</strong> A atuação inclui articulação com movimentos sociais, denúncia de violações e fortalecimento coletivo das comunidades vulnerabilizadas.",
+consequence:"O programa municipal foi notificado. Josué foi incluído em grupos de apoio. Mas quando chegou a 'segunda etapa' para o MPT, o prazo prescricional havia expirado. A violação trabalhista ficou sem reparação.",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Me mandaram para outro programa. O acidente continua sem registro. Nada mudou."',reactionType:"c-bad",
+explanation:"Acolher e encaminhar para outros programas resolve a necessidade imediata mas não enfrenta nenhuma das violações. O acidente não registrado, a inacessibilidade do programa e a exclusão sistêmica continuam sem resposta.",
+concept:"<strong>LBI, Art. 8º:</strong> É dever do Estado assegurar à pessoa com deficiência, com prioridade, a efetivação dos direitos referentes à profissionalização, ao trabalho e à reabilitação.",
+consequence:"Josué foi inserido em outro programa. O acidente de trabalho nunca foi registrado. O programa original continuou inacessível. A raiva acumulada voltou, mais intensa.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}},
+{id:15,context:"Saúde",contextClass:"tag-saude",avatar:"👩",name:"Yasmin, 31 anos",desc:"Mulher com síndrome genética rara — vive semi-independentemente",
+voice:'"A médica olhou para minha barriga e disse: você pensou bem nisso? Como se eu não soubesse que quero esse filho. Como se ser eu já fosse um erro."',
+title:"O direito de ser mãe",
+text:"Yasmin está grávida de 14 semanas. Tem síndrome genética que afeta sua coordenação motora e velocidade de processamento — mas vive semi-independentemente, trabalha numa padaria e tem um companheiro. A médica do pré-natal sugeriu fortemente que ela 'pensasse melhor' na gravidez e insinuou que não teria condições de criar um filho. Yasmin chegou ao ambulatório em choque: 'ela falou como se eu fosse uma criança irresponsável. Mas eu quero esse bebê'.",
+risk:"Violação do direito reprodutivo, violência obstétrica com viés eugenista e negação da maternidade",
+role:"<strong>Você é psicólogo(a) no ambulatório de saúde da mulher.</strong> Yasmin chega após a consulta de pré-natal.",
+choices:{
+A:"Acolher Yasmin, validar seu sofrimento e oferecer suporte emocional, trabalhando em sessões individuais os medos relacionados à maternidade e à deficiência.",
+B:"Acolher Yasmin, validar seu direito à maternidade sem questionar sua decisão e articular rede de suporte psicossocial para que ela tenha uma gravidez e maternidade com dignidade.",
+C:"Acolher Yasmin, validar seu direito à maternidade, articular rede de suporte psicossocial e registrar formalmente a conduta da médica junto à ouvidoria e ao CRM como possível violência obstétrica com viés eugenista."
+},
+correct:"C",neutral:"B",wrong:"A",
+feedback:{
+C:{type:"correct",result:"Intervenção ideal — +100 XP",icon:"✅",
+reaction:'"Você disse que o que a médica fez tem nome. Tem lei. Que não foi só falta de educação. Isso importou muito para mim."',reactionType:"c-good",
+explanation:"Yasmin já decidiu — ela quer o bebê. O suporte psicossocial é o que ela precisa. A conduta da médica configura violência obstétrica com viés eugenista — registrá-la transforma o caso de sofrimento individual em denúncia com potencial de mudança institucional.",
+concept:"<strong>LBI, Art. 6º:</strong> A deficiência não afeta a plena capacidade civil da pessoa, inclusive para constituir família. A Convenção da ONU (Art. 23) garante o direito de PCDs de decidir livremente o número de filhos.",
+consequence:"A denúncia ao CRM foi encaminhada. Yasmin teve acompanhamento pré-natal com equipe multiprofissional. Seu filho nasceu saudável. 'Quis provar que podia. Mas no fundo eu já sabia que podia. Era a médica que não sabia.'",
+consequenceType:"c-good",xp:100,axes:[1,1,1,1,1]},
+B:{type:"partial",result:"Intervenção parcial — +30 XP",icon:"⚠️",
+reaction:'"Tenho apoio. Mas a médica que me tratou assim continua no pré-natal. Outras mulheres vão passar pelo mesmo."',reactionType:"c-mid",
+explanation:"Validar a decisão e articular suporte são essenciais. O que falta é a resposta à violência sofrida. Sem registrar a conduta da médica, a violação continua sem consequências — e outras PCDs grávidas serão submetidas ao mesmo.",
+concept:"<strong>Eugenia e PCDs:</strong> A ideia de que PCDs não deveriam ter filhos tem raízes históricas na eugenia. A psicologia tem obrigação ética de reconhecer e denunciar quando práticas contemporâneas reproduzem essa lógica.",
+consequence:"Yasmin teve gravidez bem acompanhada. Mas a médica continuou no pré-natal sem consequência. Duas semanas depois, outra paciente com deficiência intelectual relatou ter recebido a mesma 'sugestão'.",
+consequenceType:"c-mid",xp:30,axes:[1,1,0,1,1]},
+A:{type:"wrong",result:"Intervenção insuficiente — +0 XP",icon:"❌",
+reaction:'"Você me ajudou com o que sinto. Mas o que fizeram comigo continuou sem resposta."',reactionType:"c-bad",
+explanation:"Oferecer suporte emocional e trabalhar 'medos relacionados à maternidade' coloca o problema dentro de Yasmin — como se ela precisasse resolver conflitos internos. O sofrimento tem origem externa: uma médica que questionou seu direito de ser mãe.",
+concept:"<strong>Código de Ética do CFP, Princípio III:</strong> O psicólogo atua com responsabilidade social e seu trabalho não deve ser utilizado como instrumento de discriminação ou estigmatização.",
+consequence:"Yasmin elaborou seus medos nas sessões. Teve sua gravidez. Mas a violência que sofreu não gerou nenhuma denúncia — e a médica continuou com o mesmo viés com outras pacientes.",
+consequenceType:"c-bad",xp:0,axes:[1,0,0,0,0]}
+}}
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let cur=0,xp=0,correct=0,answered=false;
+const TOTAL=SCENARIOS.length;
+const axes=[0,0,0,0,0];
+const LEVELS=[
+  {min:0,    label:"Estagiário(a) em Formação"},
+  {min:200,  label:"Psicólogo(a) Iniciante"},
+  {min:500,  label:"Psicólogo(a) Institucional"},
+  {min:900,  label:"Defensor(a) de Direitos"},
+  {min:1300, label:"Especialista em Inclusão"}
+];
+
+function getLevel(x){let lv=LEVELS[0];for(const l of LEVELS){if(x>=l.min)lv=l;}return lv;}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('hud').style.display=(id==='screen-game')?'flex':'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startGame(){
+  cur=0;xp=0;correct=0;answered=false;
+  axes[0]=axes[1]=axes[2]=axes[3]=axes[4]=0;
+  goTo('screen-game');
+  loadScenario(0);
+}
+
+function restartGame(){startGame();}
+
+/* ══════════════════════════════════════════
+   LOAD SCENARIO
+══════════════════════════════════════════ */
+function loadScenario(i){
+  answered=false;
+  const s=SCENARIOS[i];
+  document.getElementById('game-num').textContent='Caso '+(i+1)+' de '+TOTAL;
+  document.getElementById('game-prog').style.width=((i+1)/TOTAL*100)+'%';
+  const ct=document.getElementById('ctx-tag');
+  ct.textContent=s.context;ct.className='ctx-tag '+s.contextClass;
+  document.getElementById('char-avatar').textContent=s.avatar;
+  document.getElementById('char-name').textContent=s.name;
+  document.getElementById('char-desc').textContent=s.desc;
+  document.getElementById('char-voice').textContent=s.voice;
+  document.getElementById('sc-title').textContent=s.title;
+  document.getElementById('sc-text').textContent=s.text;
+  document.getElementById('sc-risk').textContent=s.risk;
+  document.getElementById('sc-role').innerHTML=s.role;
+  ['A','B','C'].forEach(l=>{
+    document.getElementById('choice-'+l+'-text').textContent=s.choices[l];
+    const btn=document.getElementById('choice-'+l);
+    btn.className='choice-btn';btn.disabled=false;
+  });
+  document.getElementById('feedback-panel').classList.remove('visible');
+  document.getElementById('btn-next').textContent=i<TOTAL-1?'Próximo caso →':'Ver meu resultado →';
+  document.getElementById('hud-scenario').textContent='Caso '+(i+1)+' / '+TOTAL;
+  updateHUD();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════════
+   CHOOSE
+══════════════════════════════════════════ */
+function choose(letter){
+  if(answered)return;
+  answered=true;
+  const s=SCENARIOS[cur];
+  const fb=s.feedback[letter];
+  const prevLevel=getLevel(xp).label;
+  xp+=fb.xp;
+  if(letter===s.correct)correct++;
+  if(fb.axes)fb.axes.forEach((v,i)=>{axes[i]+=v*20;});
+  const newLevel=getLevel(xp).label;
+  if(newLevel!==prevLevel)showToast('⬆ Novo nível: '+newLevel+'!');
+  ['A','B','C'].forEach(l=>{
+    const btn=document.getElementById('choice-'+l);
+    if(l===s.correct)btn.classList.add('correct');
+    else if(l===s.neutral)btn.classList.add('partial');
+    else if(l===s.wrong)btn.classList.add('wrong');
+    else btn.classList.add('dimmed');
+  });
+  document.getElementById('fb-icon').textContent=fb.icon;
+  document.getElementById('fb-result').textContent=fb.result;
+  document.getElementById('fb-result').className='fb-result fb-'+fb.type;
+  document.getElementById('fb-vr-text').textContent=fb.reaction;
+  document.getElementById('fb-voice-reaction').className='voice-reaction '+fb.reactionType;
+  document.getElementById('fb-explanation').textContent=fb.explanation;
+  document.getElementById('fb-concept').innerHTML=fb.concept;
+  document.getElementById('fb-consequence-text').textContent=fb.consequence;
+  document.getElementById('fb-consequence').className='consequence-block '+fb.consequenceType;
+  document.getElementById('fb-xp').textContent='+'+fb.xp+' XP';
+  const axNames=['🎧 Escuta','⚖️ Direitos','🏛️ Institucional','🧭 Ética','🔗 Social'];
+  const ag=document.getElementById('fb-axes-gained');
+  ag.innerHTML='';
+  if(fb.axes)fb.axes.forEach((v,i)=>{if(v>0){const el=document.createElement('span');el.className='ax-gained lit';el.textContent=axNames[i];ag.appendChild(el);}});
+  document.getElementById('feedback-panel').classList.add('visible');
+  updateHUD();
+  setTimeout(()=>document.getElementById('feedback-panel').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+/* ══════════════════════════════════════════
+   NEXT
+══════════════════════════════════════════ */
+function nextScenario(){
+  if(cur<TOTAL-1){cur++;loadScenario(cur);}
+  else showEndScreen();
+}
+
+/* ══════════════════════════════════════════
+   HUD
+══════════════════════════════════════════ */
+function updateHUD(){
+  document.getElementById('hud-xp').textContent=xp;
+  document.getElementById('hud-level').textContent=getLevel(xp).label;
+  axes.forEach((v,i)=>{
+    const bar=document.getElementById('ax'+i+'-bar');
+    if(bar)bar.style.width=Math.min(100,v/1500*100*5)+'%';
+  });
+}
+
+/* ══════════════════════════════════════════
+   END SCREEN
+══════════════════════════════════════════ */
+function showEndScreen(){
+  goTo('screen-end');
+  document.getElementById('end-xp').textContent=xp;
+  document.getElementById('end-level').textContent=getLevel(xp).label;
+  document.getElementById('end-correct').textContent=correct+'/'+TOTAL;
+  const t=document.getElementById('end-trophy');
+  const title=document.getElementById('end-title');
+  const sub=document.getElementById('end-sub');
+  const msg=document.getElementById('end-message');
+  if(xp>=1200){
+    t.textContent='🏆';title.textContent='Especialista em Inclusão';
+    sub.textContent='Você tomou as decisões mais críticas, sistêmicas e eticamente comprometidas em quase todos os casos. Sua atuação garantiu dignidade e direitos.';
+    msg.textContent='"Você chegou ao nível mais alto desta jornada — não porque acertou o maior número de questões, mas porque demonstrou que é possível atuar com escuta, conhecimento da lei, sensibilidade ética e visão estrutural ao mesmo tempo. Esse é o padrão da Psicologia comprometida com os direitos humanos."';
+  } else if(xp>=700){
+    t.textContent='🏅';title.textContent='Defensor(a) de Direitos';
+    sub.textContent='Você demonstrou bom conhecimento sobre os direitos das PCDs e atuação além do consultório. Revisita os casos onde teve dificuldade.';
+    msg.textContent='"Você demonstrou que a Psicologia pode e deve atuar além do consultório individual. Ainda há cenários onde a tendência de centralizar o problema no indivíduo apareceu — observe esses padrões. A reflexão sobre eles é o que separa o técnico competente do profissional crítico."';
+  } else if(xp>=400){
+    t.textContent='🌱';title.textContent='Psicólogo(a) Institucional';
+    sub.textContent='Você começa a perceber as dimensões coletivas da atuação, mas ainda há tendência de centrar as intervenções no indivíduo.';
+    msg.textContent='"Você está no caminho. A formação em Psicologia Social nos ensina que o sofrimento individual raramente começa no indivíduo — começa nas estruturas que o cercam. Continue exercitando esse olhar: quem é responsabilizado nessa situação? Quem deveria ser?"';
+  } else {
+    t.textContent='📚';title.textContent='Em Formação';
+    sub.textContent='Você está construindo o olhar crítico sobre a deficiência como fenômeno social. Esta jornada foi um começo.';
+    msg.textContent='"Cada profissional começa com o olhar voltado para o indivíduo. O caminho da Psicologia Social é aprender a ver além — a perceber as estruturas, as instituições e as relações de poder que constroem o sofrimento. Você fez a jornada. Agora revisita os feedbacks e pergunta: o que mudaria na minha próxima escolha?"';
+  }
+  const axMax=TOTAL*100;
+  [0,1,2,3,4].forEach(i=>{
+    const pct=Math.min(100,Math.round(axes[i]/axMax*100));
+    document.getElementById('ar'+i).style.width=pct+'%';
+    document.getElementById('arv'+i).textContent=pct+'%';
+  });
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
